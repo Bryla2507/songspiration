@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+
+actor "Użytkownik Zalogowany" as LoggedInUser
+actor "Użytkownik Niezalogowany" as GuestUser
+actor "Właściciel Pina" as PinOwner
+actor "Właściciel Pina" as PinOwner
+
+rectangle "SongSpiration" {
+  usecase "Rejestracja i Logowanie" as UC1
+  usecase "Zarządzanie Profilem" as UC2
+  usecase "Przesyłanie Plików" as UC3
+  usecase "Podgląd Nut" as UC4
+  usecase "Filtrowanie i Wyszukiwanie" as UC5
+  usecase "Polubienia i Kolekcje" as UC6
+  usecase "Udostępnianie Pinów" as UC7
+  usecase "Edycja i Usuwanie Pinów" as UC8
+}
+
+LoggedInUser --> UC1
+LoggedInUser --> UC2
+LoggedInUser --> UC3
+LoggedInUser --> UC4
+LoggedInUser --> UC5
+LoggedInUser --> UC6
+LoggedInUser --> UC7
+GuestUser --> UC1
+GuestUser --> UC4
+GuestUser --> UC5
+PinOwner --> UC8
+
+@enduml
