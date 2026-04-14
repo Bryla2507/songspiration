@@ -4,6 +4,7 @@ title SongSpiration / MusicPin — Diagram klas (model danych)
 ' Ustawienia czytelności
 hide methods
 
+' Test with Graphviz installed
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
 
