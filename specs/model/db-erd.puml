@@ -1,0 +1,93 @@
+@startuml
+title SongSpiration / MusicPin — Relacje tabel w bazie danych (ERD)
+
+hide methods
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' Używamy "class" jako reprezentacji tabel (czytelne PK/FK w atrybutach)
+
+class User <<table>> {
+  {PK} id: uniqueidentifier
+  email: nvarchar
+  password_hash: nvarchar
+  display_name: nvarchar
+  avatar_url: nvarchar
+  bio: nvarchar
+  roles: nvarchar
+  created_at: datetime2
+  last_login: datetime2
+  is_email_verified: bit
+}
+
+class AuthToken <<table>> {
+  {PK} id: uniqueidentifier
+  {FK} user_id: uniqueidentifier
+  token_hash: varbinary/nvarchar
+  type: nvarchar  ' access|refresh
+  expires_at: datetime2
+  revoked_at: datetime2
+  created_at: datetime2
+}
+
+class Pin <<table>> {
+  {PK} id: uniqueidentifier
+  {FK} owner_id: uniqueidentifier
+  title: nvarchar
+  description: nvarchar
+  instrument: nvarchar
+  visibility: nvarchar
+
+  gp_file_location_or_blob: nvarchar/varbinary
+  filename: nvarchar
+  mime_type: nvarchar
+  size: bigint
+  checksum: nvarchar
+
+  created_at: datetime2
+  updated_at: datetime2
+}
+
+class Genre <<table>> {
+  {PK} id: uniqueidentifier
+  name: nvarchar
+  slug: nvarchar
+  {unique} slug
+}
+
+class PinGenre <<table>> {
+  {PK}{FK} pin_id: uniqueidentifier
+  {PK}{FK} genre_id: uniqueidentifier
+}
+
+class Like <<table>> {
+  {PK}{FK} user_id: uniqueidentifier
+  {PK}{FK} pin_id: uniqueidentifier
+  created_at: datetime2
+  ..constraints..
+  {unique} (user_id, pin_id)
+}
+
+' ===== Relacje FK (kardynalności) =====
+User "1" ||--o{ Pin : owner_id
+User "1" ||--o{ AuthToken : user_id
+
+User "1" ||--o{ Like : user_id
+Pin  "1" ||--o{ Like : pin_id
+
+Pin   "1" ||--o{ PinGenre : pin_id
+Genre "1" ||--o{ PinGenre : genre_id
+
+note right of Like
+Unikatowa para (user_id, pin_id)
+zapewnia, że użytkownik może
+polubić dany pin max 1 raz.
+end note
+
+note right of PinGenre
+Tabela łącznikowa realizująca
+relację wiele-do-wielu Pin ↔ Genre.
+PK złożony: (pin_id, genre_id).
+end note
+
+@enduml

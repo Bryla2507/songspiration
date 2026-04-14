@@ -1,0 +1,110 @@
+@startuml
+title SongSpiration / MusicPin — Diagram klas (model danych)
+
+' Ustawienia czytelności
+hide methods
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' ===== Enumeracje / typy pomocnicze =====
+enum TokenType {
+  access
+  refresh
+}
+
+enum PinVisibility {
+  public
+  private
+  unlisted
+}
+
+enum Instrument {
+  Guitar
+  Bass
+  Drums
+  Unknown
+}
+
+' ===== Encje =====
+class User {
+  +id: UUID
+  +email: string
+  +password_hash: string
+  +display_name: string
+  +avatar_url: string
+  +bio: string
+  +roles: string
+  +created_at: datetime
+  +last_login: datetime
+  +is_email_verified: bool
+}
+
+class AuthToken {
+  +id: UUID
+  +user_id: UUID
+  +token_hash: string
+  +type: TokenType
+  +expires_at: datetime
+  +revoked_at: datetime
+  +created_at: datetime
+}
+
+class Pin {
+  +id: UUID
+  +owner_id: UUID
+  +title: string
+  +description: string
+  +instrument: Instrument
+  +visibility: PinVisibility
+
+  +gp_file_location_or_blob: string
+  +filename: string
+  +mime_type: string
+  +size: long
+  +checksum: string
+
+  +created_at: datetime
+  +updated_at: datetime
+}
+
+class Genre {
+  +id: UUID
+  +name: string
+  +slug: string
+}
+
+class PinGenre {
+  +pin_id: UUID
+  +genre_id: UUID
+}
+
+class Like {
+  +user_id: UUID
+  +pin_id: UUID
+  +created_at: datetime
+  ..constraints..
+  {unique} (user_id, pin_id)
+}
+
+' ===== Relacje =====
+User "1" -- "0..*" Pin : owner
+User "1" -- "0..*" AuthToken : sessions
+
+Pin "1" -- "0..*" Like
+User "1" -- "0..*" Like
+
+Pin "1" -- "0..*" PinGenre
+Genre "1" -- "0..*" PinGenre
+
+note right of PinGenre
+Tabela łącznikowa many-to-many
+Pin ↔ Genre
+end note
+
+note right of AuthToken
+W specyfikacji: AuthToken/Session
+Przechowuje hash tokenu oraz typ
+(access/refresh), daty i revokację.
+end note
+
+@enduml
