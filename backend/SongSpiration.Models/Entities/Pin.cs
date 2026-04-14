@@ -1,28 +1,24 @@
 using System;
 using System.Collections.Generic;
 
-namespace SongSpiration.Models;
-
-public class Pin
+namespace SongSpiration.Models.Entities
 {
-    public Guid Id { get; set; }
-    public Guid OwnerId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public Instrument Instrument { get; set; }
-    public PinVisibility Visibility { get; set; }
-
-    public string GpFileLocationOrBlob { get; set; } = string.Empty;
-    public string Filename { get; set; } = string.Empty;
-    public string MimeType { get; set; } = string.Empty;
-    public long Size { get; set; }
-    public string Checksum { get; set; } = string.Empty;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-    // Navigation properties
-    public virtual User Owner { get; set; } = null!;
-    public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
-    public virtual ICollection<PinGenre> PinGenres { get; set; } = new List<PinGenre>();
+    public class Pin
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int OwnerId { get; set; }
+        public User Owner { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
+        public string MimeType { get; set; }
+        public long FileSize { get; set; }
+        public string Checksum { get; set; }
+        public string Visibility { get; set; } // Public or Private
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public ICollection<PinGenre> PinGenres { get; set; }
+        public ICollection<Like> Likes { get; set; }
+    }
 }

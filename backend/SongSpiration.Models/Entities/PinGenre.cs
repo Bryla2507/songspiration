@@ -1,13 +1,10 @@
-using System;
-
-namespace SongSpiration.Models;
-
-public class PinGenre
+namespace SongSpiration.Models.Entities
 {
-    public Guid PinId { get; set; }
-    public Guid GenreId { get; set; }
-
-    // Navigation properties
-    public virtual Pin Pin { get; set; } = null!;
-    public virtual Genre Genre { get; set; } = null!;
+    public class PinGenre
+    {
+        public int PinId { get; set; }
+        public Pin Pin { get; set; }
+        public int GenreId { get; set; }
+        public Genre Genre { get; set; }
+    }
 }
