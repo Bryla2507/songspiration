@@ -3,30 +3,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using SongSpiration.BLL.DTOs;
 using SongSpiration.BLL.Interfaces;
+using SongSpiration.DAL.Interfaces;
 using SongSpiration.Models;
+using SongSpiration.Models.Entities;
 
 namespace SongSpiration.BLL.Services;
 
 public class UserService : IUserService
 {
-    // In a real application, these would be injected repositories or a DB context
-    // For Version I, we might use mock implementation or placeholders
-    
+    private readonly IUserRepository _userRepository;
+
+    public UserService(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
     public async Task<AuthResponseDto> RegisterAsync(RegisterUserDto registerDto)
     {
-        // Placeholder for registration logic
+        // Check if user already exists
+        var existingUser = await _userRepository.GetByEmailAsync(registerDto.Email);
+        if (existingUser != null)
+        {
+            throw new InvalidOperationException("User with this email already exists.");
+        }
+
         var user = new User
         {
             Id = Guid.NewGuid(),
             Email = registerDto.Email,
             DisplayName = registerDto.DisplayName,
-            PasswordHash = "hashed_" + registerDto.Password, // Simple placeholder
+            PasswordHash = "hashed_" + registerDto.Password, // Simple placeholder hashing
             CreatedAt = DateTime.UtcNow
         };
 
+        await _userRepository.AddAsync(user);
+        await _userRepository.SaveChangesAsync();
+
         return new AuthResponseDto
         {
-            AccessToken = "mock_access_token",
+            AccessToken = "mock_access_token", // In real app, this would be a JWT token
             RefreshToken = "mock_refresh_token",
             User = MapToDto(user)
         };
@@ -34,34 +49,56 @@ public class UserService : IUserService
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
     {
-        // Placeholder for login logic
+        var user = await _userRepository.GetByEmailAsync(loginDto.Email);
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        // In a real app, we would verify the password hash here
+        // For now, we'll just return a mock token
+
         return new AuthResponseDto
         {
-            AccessToken = "mock_access_token",
-            RefreshToken = "mock_refresh_token",
-            User = new UserDto
-            {
-                Id = Guid.NewGuid(),
-                Email = loginDto.Email,
-                DisplayName = "Logged In User"
-            }
+            AccessToken = "mock_access_token_" + user.Id, // Include user ID in token for demo
+            RefreshToken = "mock_refresh_token_" + user.Id,
+            User = MapToDto(user)
         };
     }
 
     public async Task<UserDto?> GetProfileAsync(Guid userId)
     {
-        return new UserDto
-        {
-            Id = userId,
-            Email = "user@example.com",
-            DisplayName = "Example User"
-        };
+        var user = await _userRepository.GetByIdAsync(userId);
+        return user != null ? MapToDto(user) : null;
     }
 
     public async Task<UserDto> UpdateProfileAsync(Guid userId, UserDto updateDto)
     {
-        updateDto.Id = userId;
-        return updateDto;
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+        {
+            throw new KeyNotFoundException($"User with ID {userId} not found.");
+        }
+
+        if (updateDto.DisplayName != null)
+        {
+            user.DisplayName = updateDto.DisplayName;
+        }
+
+        if (updateDto.AvatarUrl != null)
+        {
+            user.AvatarUrl = updateDto.AvatarUrl;
+        }
+
+        if (updateDto.Bio != null)
+        {
+            user.Bio = updateDto.Bio;
+        }
+
+        _userRepository.Update(user);
+        await _userRepository.SaveChangesAsync();
+
+        return MapToDto(user);
     }
 
     private UserDto MapToDto(User user)

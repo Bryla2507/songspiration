@@ -4,15 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using SongSpiration.BLL.DTOs;
 using SongSpiration.BLL.Interfaces;
+using SongSpiration.DAL.Interfaces;
 using SongSpiration.Models;
+using SongSpiration.Models.Entities;
 
 namespace SongSpiration.BLL.Services;
 
 public class PinService : IPinService
 {
+    private readonly IPinRepository _pinRepository;
+
+    public PinService(IPinRepository pinRepository)
+    {
+        _pinRepository = pinRepository;
+    }
+
     public async Task<PinDto> CreatePinAsync(Guid ownerId, CreatePinDto createDto)
     {
-        // TODO: Implement actual pin creation logic with database persistence
         var pin = new Pin
         {
             Id = Guid.NewGuid(),
@@ -20,60 +28,84 @@ public class PinService : IPinService
             Title = createDto.Title,
             Description = createDto.Description,
             Visibility = createDto.Visibility,
-            Instrument = Instrument.Guitar,
-            Filename = "default.gp",
+            Instrument = Instrument.Guitar, // Default instrument
+            Filename = "default.gp", // Default filename
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
 
-        return await Task.FromResult(MapToDto(pin));
+        await _pinRepository.AddAsync(pin);
+        await _pinRepository.SaveChangesAsync();
+
+        return MapToDto(pin);
     }
 
     public async Task<PinDto?> GetPinByIdAsync(Guid pinId)
     {
-        // TODO: Implement actual pin retrieval logic from database
-        return await Task.FromResult<PinDto?>(null);
+        var pin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
+        return pin != null ? MapToDto(pin) : null;
     }
 
     public async Task<PinDto> UpdatePinAsync(Guid pinId, UpdatePinDto updateDto)
     {
-        // TODO: Implement actual pin update logic
-        var updatedPin = new PinDto
+        var existingPin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
+        if (existingPin == null)
         {
-            Id = pinId,
-            Title = updateDto.Title ?? "",
-            Description = updateDto.Description,
-            Visibility = updateDto.Visibility ?? PinVisibility.Public,
-            Instrument = Instrument.Guitar,
-            Filename = "updated.gp",
-            CreatedAt = DateTime.UtcNow.AddDays(-1)
-        };
+            throw new KeyNotFoundException($"Pin with ID {pinId} not found.");
+        }
 
-        return await Task.FromResult(updatedPin);
+        if (updateDto.Title != null)
+        {
+            existingPin.Title = updateDto.Title;
+        }
+
+        if (updateDto.Description != null)
+        {
+            existingPin.Description = updateDto.Description;
+        }
+
+        if (updateDto.Visibility != null)
+        {
+            existingPin.Visibility = updateDto.Visibility.Value;
+        }
+
+        existingPin.UpdatedAt = DateTime.UtcNow;
+        _pinRepository.Update(existingPin);
+        await _pinRepository.SaveChangesAsync();
+
+        return MapToDto(existingPin);
     }
 
     public async Task<bool> DeletePinAsync(Guid pinId)
     {
-        // TODO: Implement actual pin deletion logic
-        return await Task.FromResult(false);
+        var pin = await _pinRepository.GetByIdAsync(pinId);
+        if (pin == null)
+        {
+            return false;
+        }
+
+        _pinRepository.Remove(pin);
+        await _pinRepository.SaveChangesAsync();
+        return true;
     }
 
     public async Task<IEnumerable<PinDto>> GetAllPinsAsync()
     {
-        // TODO: Implement actual retrieval of all pins from database
-        return await Task.FromResult<IEnumerable<PinDto>>(new List<PinDto>());
+        var pins = await _pinRepository.GetPinsAsync();
+        return pins.Select(MapToDto);
     }
 
     public async Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId)
     {
-        // TODO: Implement actual retrieval of pins by user ID from database
-        return await Task.FromResult<IEnumerable<PinDto>>(new List<PinDto>());
+        var pins = await _pinRepository.GetPinsAsync();
+        return pins.Where(p => p.OwnerId == userId).Select(MapToDto);
     }
 
     public async Task<IEnumerable<PinDto>> GetPinsByBoardIdAsync(Guid boardId)
     {
-        // TODO: Implement actual retrieval of pins by board ID from database
-        return await Task.FromResult<IEnumerable<PinDto>>(new List<PinDto>());
+        // For now, return empty list as board functionality is not fully implemented
+        // In a real implementation, this would filter pins by board ID
+        return new List<PinDto>();
     }
 
     private PinDto MapToDto(Pin pin)

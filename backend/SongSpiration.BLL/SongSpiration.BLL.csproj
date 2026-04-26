@@ -6,8 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SongSpiration.Models\SongSpiration.Models.csproj" />
-  </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SongSpiration.Models\SongSpiration.Models.csproj" />
+     <ProjectReference Include="..\SongSpiration.DAL\SongSpiration.DAL.csproj" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+   </ItemGroup>
 
 </Project>
