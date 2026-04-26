@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using SongSpiration.Models;
+using SongSpiration.Models.Entities;
 
 namespace SongSpiration.DAL.Interfaces;
 
