@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SongSpiration.Models.Entities
 {
@@ -14,5 +15,9 @@ namespace SongSpiration.Models.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsEmailVerified { get; set; }
+
+        // Navigation properties
+        public ICollection<Pin> Pins { get; set; } = new List<Pin>();
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 }

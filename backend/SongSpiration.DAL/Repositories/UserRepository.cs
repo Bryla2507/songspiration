@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SongSpiration.DAL.Interfaces;
-using SongSpiration.Models;
+using SongSpiration.Models.Entities;
 
 namespace SongSpiration.DAL.Repositories;
 

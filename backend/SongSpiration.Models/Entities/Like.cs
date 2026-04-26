@@ -8,6 +8,6 @@ namespace SongSpiration.Models.Entities
         public User User { get; set; } = null!;
         public Guid PinId { get; set; }
         public Pin Pin { get; set; } = null!;
-        public DateTime LikedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

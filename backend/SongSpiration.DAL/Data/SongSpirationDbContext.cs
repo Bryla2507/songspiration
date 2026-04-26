@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SongSpiration.Models;
+using SongSpiration.Models.Entities;
 
 namespace SongSpiration.DAL;
 
