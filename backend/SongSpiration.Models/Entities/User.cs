@@ -4,11 +4,13 @@ namespace SongSpiration.Models.Entities
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string DisplayName { get; set; }
-        public string Avatar { get; set; }
+        public Guid Id { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string? AvatarUrl { get; set; }
+        public string? Bio { get; set; }
+        public string Roles { get; set; } = "User";
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsEmailVerified { get; set; }
