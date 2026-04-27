@@ -19,8 +19,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\SongSpiration.BLL\SongSpiration.BLL.csproj" />
-  </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\..\SongSpiration.BLL\SongSpiration.BLL.csproj" />
+     <ProjectReference Include="..\..\SongSpiration.Models\SongSpiration.Models.csproj" />
+   </ItemGroup>
 
 </Project>
