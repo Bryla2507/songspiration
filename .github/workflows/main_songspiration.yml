@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'songspiration'
           slot-name: 'Production'
-          package: frontend  # Ścieżka do zbudowanych plików Vue
+          package: ./frontend  # Ścieżka do zbudowanych plików Vue
           
