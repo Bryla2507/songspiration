@@ -1,6 +1,0 @@
-@SongSpiration.API_HostAddress = http://localhost:5104
-
-GET {{SongSpiration.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
