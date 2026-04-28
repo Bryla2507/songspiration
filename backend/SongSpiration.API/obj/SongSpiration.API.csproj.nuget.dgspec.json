@@ -1,0 +1,294 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {}
+  },
+  "projects": {
+    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
+        "projectName": "SongSpiration.API",
+        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
+        "packagesPath": "/home/debilian/.nuget/packages/",
+        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/debilian/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
+                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.25, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
+        "projectName": "SongSpiration.BLL",
+        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
+        "packagesPath": "/home/debilian/.nuget/packages/",
+        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/debilian/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
+                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj"
+              },
+              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
+        "projectName": "SongSpiration.DAL",
+        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
+        "packagesPath": "/home/debilian/.nuget/packages/",
+        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/debilian/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
+        "projectName": "SongSpiration.Models",
+        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
+        "packagesPath": "/home/debilian/.nuget/packages/",
+        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/debilian/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

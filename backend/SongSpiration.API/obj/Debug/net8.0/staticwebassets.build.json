@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "n1uwdVhDynqg5pTzgQ7eqTQbaPLK5b4wxsDsqQyfzNY=",
+  "Source": "SongSpiration.API",
+  "BasePath": "_content/SongSpiration.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
