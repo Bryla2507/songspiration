@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "n1uwdVhDynqg5pTzgQ7eqTQbaPLK5b4wxsDsqQyfzNY=",
+  "Hash": "dVGtgUqVjpA6WKpmy2erTnAndSMygWTDgMi9DHfpodc=",
   "Source": "SongSpiration.API",
   "BasePath": "_content/SongSpiration.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "SongSpiration.API/wwwroot",
+      "Source": "SongSpiration.API",
+      "ContentRoot": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/wwwroot/",
+      "BasePath": "_content/SongSpiration.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/wwwroot/uploads/4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5",
+      "SourceId": "SongSpiration.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/wwwroot/",
+      "BasePath": "_content/SongSpiration.API",
+      "RelativePath": "uploads/4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5"
+    },
+    {
+      "Identity": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/wwwroot/uploads/e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5",
+      "SourceId": "SongSpiration.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/wwwroot/",
+      "BasePath": "_content/SongSpiration.API",
+      "RelativePath": "uploads/e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5"
+    }
+  ]
 }

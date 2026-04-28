@@ -34,6 +34,24 @@ public class PinService : IPinService
             UpdatedAt = DateTime.UtcNow
         };
 
+        // Handle file information if provided
+        if (!string.IsNullOrEmpty(createDto.TempFileLocation) && System.IO.File.Exists(createDto.TempFileLocation))
+        {
+            var fileInfo = new FileInfo(createDto.TempFileLocation);
+            pin.FilePath = createDto.TempFileLocation;
+            pin.MimeType = "application/octet-stream"; // Default mime type for binary files
+            pin.Size = fileInfo.Length;
+            pin.Checksum = ""; // In a real app, you would calculate a checksum here
+        }
+        else
+        {
+            // Default values if no file is provided
+            pin.FilePath = "default.gp";
+            pin.MimeType = "application/octet-stream";
+            pin.Size = 0;
+            pin.Checksum = "";
+        }
+
         await _pinRepository.AddAsync(pin);
         await _pinRepository.SaveChangesAsync();
 
