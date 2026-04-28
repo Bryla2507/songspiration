@@ -58,7 +58,10 @@ onMounted(() => {
       enableCursor: true,
     },
     display: {
-      layoutMode: 'horizontal'
+      layoutMode: 'horizontal',
+      resources: {
+        fontDirectory: '/font/' 
+      }
     }
   });
 
