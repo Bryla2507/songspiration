@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {}
+    "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {}
   },
   "projects": {
-    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {
+    "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
+        "projectUniqueName": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
         "projectName": "SongSpiration.API",
-        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
-        "packagesPath": "/home/debilian/.nuget/packages/",
-        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.API/obj/",
+        "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/SongSpiration.API.csproj",
+        "packagesPath": "/home/oskarito/.nuget/packages/",
+        "outputPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/debilian/.nuget/NuGet/NuGet.Config"
+          "/home/oskarito/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
-                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj"
+              "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
+                "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj"
               }
             }
           }
@@ -36,11 +36,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -51,9 +46,17 @@
               "target": "Package",
               "version": "[8.0.25, )"
             },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -79,21 +82,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
+    "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
+        "projectUniqueName": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
         "projectName": "SongSpiration.BLL",
-        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
-        "packagesPath": "/home/debilian/.nuget/packages/",
-        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.BLL/obj/",
+        "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/SongSpiration.BLL.csproj",
+        "packagesPath": "/home/oskarito/.nuget/packages/",
+        "outputPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.BLL/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/debilian/.nuget/NuGet/NuGet.Config"
+          "/home/oskarito/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -105,11 +108,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
-                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj"
+              "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
+                "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj"
               },
-              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
-                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
+              "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+                "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
               }
             }
           }
@@ -118,11 +121,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -150,21 +148,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
+    "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
+        "projectUniqueName": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
         "projectName": "SongSpiration.DAL",
-        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
-        "packagesPath": "/home/debilian/.nuget/packages/",
-        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.DAL/obj/",
+        "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
+        "packagesPath": "/home/oskarito/.nuget/packages/",
+        "outputPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/debilian/.nuget/NuGet/NuGet.Config"
+          "/home/oskarito/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -176,8 +174,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
-                "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
+              "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+                "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
               }
             }
           }
@@ -186,11 +184,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -228,21 +221,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+    "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
+        "projectUniqueName": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
         "projectName": "SongSpiration.Models",
-        "projectPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
-        "packagesPath": "/home/debilian/.nuget/packages/",
-        "outputPath": "/home/debilian/Dokumenty/songspiration/backend/SongSpiration.Models/obj/",
+        "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
+        "packagesPath": "/home/oskarito/.nuget/packages/",
+        "outputPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/debilian/.nuget/NuGet/NuGet.Config"
+          "/home/oskarito/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -260,11 +253,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -286,7 +274,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.419/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

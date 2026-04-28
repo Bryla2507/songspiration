@@ -23,10 +23,11 @@ public class CreatePinDto
 {
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public Instrument Instrument { get; set; }
     public PinVisibility Visibility { get; set; }
-    public List<Guid> GenreIds { get; set; } = new();
-    
-    // In practice, this would also include the file stream or bytes
+    public List<string> GenreIds { get; set; } = new();
+
+    // File will be handled separately in the controller
     public string? TempFileLocation { get; set; }
 }
 

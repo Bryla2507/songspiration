@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LZsS2rMNzvk=",
+  "dgSpecHash": "BlUGXYoBafqEdYyh0cnX1+7yONTxPYG1bS/o8IhS0Te3ac9LKVmLfT8/xC/vEmUez9T4HpSgA1kQmrMK8vz4Ng==",
   "success": true,
-  "projectFilePath": "D:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.Models\\SongSpiration.Models.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Filip\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.26\\microsoft.netcore.app.ref.8.0.26.nupkg.sha512",
-    "C:\\Users\\Filip\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.26\\microsoft.windowsdesktop.app.ref.8.0.26.nupkg.sha512",
-    "C:\\Users\\Filip\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.26\\microsoft.aspnetcore.app.ref.8.0.26.nupkg.sha512"
-  ],
+  "projectFilePath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

@@ -3995,19 +3995,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Filip\\.nuget\\packages\\": {}
+    "/home/oskarito/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.DAL\\SongSpiration.DAL.csproj",
+      "projectUniqueName": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
       "projectName": "SongSpiration.DAL",
-      "projectPath": "d:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.DAL\\SongSpiration.DAL.csproj",
-      "packagesPath": "C:\\Users\\Filip\\.nuget\\packages\\",
-      "outputPath": "d:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.DAL\\obj\\",
+      "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/SongSpiration.DAL.csproj",
+      "packagesPath": "/home/oskarito/.nuget/packages/",
+      "outputPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.DAL/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Filip\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/oskarito/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4019,8 +4019,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.Models\\SongSpiration.Models.csproj": {
-              "projectPath": "D:\\studia\\taiib\\projekt\\songspiration\\backend\\SongSpiration.Models\\SongSpiration.Models.csproj"
+            "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj": {
+              "projectPath": "/home/oskarito/Desktop/project/songspiration/backend/SongSpiration.Models/SongSpiration.Models.csproj"
             }
           }
         }
@@ -4029,13 +4029,7 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "10.0.200"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -4067,26 +4061,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.26, 8.0.26]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.26, 8.0.26]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.26, 8.0.26]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
