@@ -215,7 +215,7 @@ onUnmounted(() => {
 }
 
 :deep(.at-cursor-beat) {
-  background: rgba(0, 0, 0, 0.05) !important;
+  background: rgba(0,0,0,0.5) !important;
 }
 
 /* SCROLLBAR */
