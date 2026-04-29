@@ -111,14 +111,6 @@ Projekt opiera się na **architekturze warstwowej**, która zapewnia:
   - Utworzenie diagramu architektury systemu (patrz sekcja [Diagram Architektury](#diagram-architektury)).
   - Opis aktualnego stanu projektu i planów rozwoju.
 
-### **3. Współpraca z Zespołem**
-| Osoba       | Zakres Odpowiedzialności                                  | Współpraca z AI                          |
-|-------------|----------------------------------------------------------|------------------------------------------|
-| **Ola**     | Architektura, dokumentacja, wsparcie AI.                | Cline (planowanie), Copilot (kod).       |
-| **Filip**   | Warstwa Logiki Biznesowej (BLL), testy jednostkowe.      | Copilot (generowanie testów).           |
-| **Oskar**   | Warstwa Dostępu do Danych (DAL), specyfikacja systemu.  | Cline (analiza modeli), Copilot (kod).  |
-| **Kacper**  | Dokumentacja, modele, diagramy UML.                      | Cline (generowanie diagramów).          |
-
 ---
 
 ## 🛠 Stos Technologiczny
@@ -162,17 +154,6 @@ Projekt opiera się na **architekturze warstwowej**, która zapewnia:
    dotnet run
    ```
    API będzie dostępne pod adresem: `https://localhost:5001` lub `http://localhost:5000`.
-
----
-
-## 📂 Podział Pracy
-
-| Osoba       | Zadania                                                                 |
-|-------------|------------------------------------------------------------------------|
-| **Ola**     | Architektura, dokumentacja, wsparcie AI, koordynacja zespołu.         |
-| **Filip**   | Implementacja serwisów (BLL) i testów jednostkowych.                  |
-| **Oskar**   | Implementacja repozytoriów (DAL) i migracji bazy danych.              |
-| **Kacper**  | Dokumentacja projektowa, diagramy UML, modele danych.                 |
 
 ---
 
