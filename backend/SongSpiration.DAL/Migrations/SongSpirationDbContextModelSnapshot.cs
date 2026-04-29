@@ -145,14 +145,9 @@ namespace SongSpiration.DAL.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("GenreId1")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("PinId", "GenreId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("GenreId1");
 
                     b.ToTable("PinGenres");
                 });
@@ -246,14 +241,10 @@ namespace SongSpiration.DAL.Migrations
             modelBuilder.Entity("SongSpiration.Models.Entities.PinGenre", b =>
                 {
                     b.HasOne("SongSpiration.Models.Entities.Genre", "Genre")
-                        .WithMany()
+                        .WithMany("PinGenres")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SongSpiration.Models.Entities.Genre", null)
-                        .WithMany("PinGenres")
-                        .HasForeignKey("GenreId1");
 
                     b.HasOne("SongSpiration.Models.Entities.Pin", "Pin")
                         .WithMany("PinGenres")

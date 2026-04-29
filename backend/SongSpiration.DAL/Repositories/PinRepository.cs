@@ -16,13 +16,30 @@ public class PinRepository : IPinRepository
 
     public async Task AddAsync(Pin pin) => await _db.Pins.AddAsync(pin);
 
-    public void Remove(Pin pin) => _db.Pins.Remove(pin);
+   public void Remove(Pin pin)
+{
+    // Sprawdzamy, czy w lokalnej pamięci (ChangeTracker) jest już Pin o tym samym ID
+    var trackedEntity = _db.Pins.Local.FirstOrDefault(p => p.Id == pin.Id);
+
+    if (trackedEntity != null)
+    {
+        // Jeśli tak, odpinamy tamten obiekt, by uniknąć konfliktu, lub usuwamy bezpośrednio ten śledzony
+        _db.Entry(trackedEntity).State = EntityState.Detached;
+    }
+    
+    // Teraz możemy bezpiecznie oznaczyć obiekt do usunięcia
+    _db.Pins.Remove(pin);
+}
 
     public void Update(Pin pin) => _db.Pins.Update(pin);
 
-    public async Task<Pin?> GetByIdAsync(Guid id)
-        => await _db.Pins.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-
+   public async Task<Pin?> GetByIdAsync(Guid id)
+    {
+        // Dodanie .AsNoTracking() rozwiązuje konflikt śledzenia
+        return await _db.Pins
+            .AsNoTracking() 
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
     public async Task<Pin?> GetByIdWithDetailsAsync(Guid id)
         => await _db.Pins
             .Include(p => p.Owner)

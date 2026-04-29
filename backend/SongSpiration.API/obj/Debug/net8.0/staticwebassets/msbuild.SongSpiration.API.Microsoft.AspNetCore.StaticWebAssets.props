@@ -1,11 +1,11 @@
 ﻿<Project>
   <ItemGroup>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5))">
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\7642a26d-5e22-41ac-9d39-6cb0de2e8202.gp5))">
       <SourceType>Package</SourceType>
       <SourceId>SongSpiration.API</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/SongSpiration.API</BasePath>
-      <RelativePath>uploads/4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5</RelativePath>
+      <RelativePath>uploads/7642a26d-5e22-41ac-9d39-6cb0de2e8202.gp5</RelativePath>
       <AssetKind>All</AssetKind>
       <AssetMode>All</AssetMode>
       <AssetRole>Primary</AssetRole>
@@ -14,23 +14,7 @@
       <AssetTraitValue></AssetTraitValue>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\4f3719fb-6d9a-4e4b-9d4e-2a7191397e70.gp5))</OriginalItemSpec>
-    </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5))">
-      <SourceType>Package</SourceType>
-      <SourceId>SongSpiration.API</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/SongSpiration.API</BasePath>
-      <RelativePath>uploads/e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\e538f0df-8415-4bfa-aec1-4983a91f93f9.gp5))</OriginalItemSpec>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\7642a26d-5e22-41ac-9d39-6cb0de2e8202.gp5))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>
