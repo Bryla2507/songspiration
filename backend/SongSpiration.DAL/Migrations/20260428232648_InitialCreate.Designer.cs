@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SongSpiration.DAL;
 
@@ -10,9 +11,11 @@ using SongSpiration.DAL;
 namespace SongSpiration.DAL.Migrations
 {
     [DbContext(typeof(SongSpirationDbContext))]
-    partial class SongSpirationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260428232648_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/SongSpiration.API.props" />
-</Project>

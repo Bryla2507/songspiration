@@ -1,0 +1,126 @@
+@startuml
+title SongSpiration / MusicPin — Diagram klas (warstwa BLL)
+
+' Ustawienia czytelności
+hide circle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' ===== Interfejsy =====
+interface IPinService {
+  + {abstract} CreatePin(PinCreateDto pinDto)
+  + {abstract} GetPinById(Guid pinId)
+  + {abstract} GetAllPins()
+  + {abstract} UpdatePin(Guid pinId, PinUpdateDto pinDto)
+  + {abstract} DeletePin(Guid pinId)
+  + {abstract} LikePin(Guid pinId, Guid userId)
+  + {abstract} UnlikePin(Guid pinId, Guid userId)
+}
+
+interface IUserService {
+  + {abstract} Register(UserRegisterDto userDto)
+  + {abstract} Login(UserLoginDto userDto)
+  + {abstract} GetUserById(Guid userId)
+  + {abstract} UpdateUser(Guid userId, UserUpdateDto userDto)
+  + {abstract} DeleteUser(Guid userId)
+}
+
+interface ILikeService {
+  + {abstract} Like(Guid pinId, Guid userId)
+  + {abstract} Unlike(Guid pinId, Guid userId)
+  + {abstract} IsLiked(Guid pinId, Guid userId)
+}
+
+interface ICollectionService {
+  + {abstract} CreateCollection(CollectionCreateDto collectionDto)
+  + {abstract} GetCollectionById(Guid collectionId)
+  + {abstract} AddPinToCollection(Guid collectionId, Guid pinId)
+  + {abstract} RemovePinFromCollection(Guid collectionId, Guid pinId)
+}
+
+interface IFilterService {
+  + {abstract} FilterPins(PinFilterDto filterDto)
+}
+
+' ===== Serwisy =====
+class PinService {
+  - _pinRepository: IPinRepository
+  - _likeRepository: ILikeRepository
+  - _mapper: IMapper
+  + CreatePin(PinCreateDto pinDto)
+  + GetPinById(Guid pinId)
+  + GetAllPins()
+  + UpdatePin(Guid pinId, PinUpdateDto pinDto)
+  + DeletePin(Guid pinId)
+  + LikePin(Guid pinId, Guid userId)
+  + UnlikePin(Guid pinId, Guid userId)
+}
+
+class UserService {
+  - _userRepository: IUserRepository
+  - _authTokenRepository: IAuthTokenRepository
+  - _mapper: IMapper
+  + Register(UserRegisterDto userDto)
+  + Login(UserLoginDto userDto)
+  + GetUserById(Guid userId)
+  + UpdateUser(Guid userId, UserUpdateDto userDto)
+  + DeleteUser(Guid userId)
+}
+
+' ===== DTOs =====
+class PinCreateDto {
+  + Title: string
+  + Description: string
+  + Instrument: Instrument
+  + Visibility: PinVisibility
+  + File: IFormFile
+}
+
+class PinUpdateDto {
+  + Title: string
+  + Description: string
+  + Visibility: PinVisibility
+}
+
+class UserRegisterDto {
+  + Email: string
+  + Password: string
+  + DisplayName: string
+}
+
+class UserLoginDto {
+  + Email: string
+  + Password: string
+}
+
+class UserUpdateDto {
+  + DisplayName: string
+  + Bio: string
+  + AvatarUrl: string
+}
+
+class CollectionCreateDto {
+  + Title: string
+  + Description: string
+  + Visibility: PinVisibility
+}
+
+class PinFilterDto {
+  + Genre: string
+  + Instrument: Instrument
+  + Visibility: PinVisibility
+}
+
+' ===== Relacje =====
+IPinService <|-- PinService
+IUserService <|-- UserService
+
+IPinService ..> PinCreateDto : uses
+IPinService ..> PinUpdateDto : uses
+IUserService ..> UserRegisterDto : uses
+IUserService ..> UserLoginDto : uses
+IUserService ..> UserUpdateDto : uses
+ICollectionService ..> CollectionCreateDto : uses
+IFilterService ..> PinFilterDto : uses
+
+@enduml

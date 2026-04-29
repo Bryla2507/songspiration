@@ -22,5 +22,10 @@ public class UserRepository : IUserRepository
 
     public void Update(User user) => _db.Users.Update(user);
 
+    public void Delete(User user)
+{
+    _db.Users.Remove(user);
+}
+
     public Task<int> SaveChangesAsync() => _db.SaveChangesAsync();
 }

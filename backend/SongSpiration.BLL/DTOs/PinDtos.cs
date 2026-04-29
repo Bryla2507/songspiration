@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SongSpiration.Models;
 
 namespace SongSpiration.BLL.DTOs;
@@ -25,7 +26,9 @@ public class CreatePinDto
     public string? Description { get; set; }
     public Instrument Instrument { get; set; }
     public PinVisibility Visibility { get; set; }
-    public List<string> GenreIds { get; set; } = new();
+    
+    // NAPRAWA: Zmieniono z List<string> na List<Guid>
+    public List<Guid> GenreIds { get; set; } = new();
 
     // File will be handled separately in the controller
     public string? TempFileLocation { get; set; }

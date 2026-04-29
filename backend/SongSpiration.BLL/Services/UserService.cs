@@ -101,6 +101,16 @@ public class UserService : IUserService
         return MapToDto(user);
     }
 
+    public async Task<bool> DeleteAccountAsync(Guid userId)
+{
+    var user = await _userRepository.GetByIdAsync(userId);
+    if (user == null) return false;
+
+    _userRepository.Delete(user);
+    await _userRepository.SaveChangesAsync();
+    return true;
+}
+
     private UserDto MapToDto(User user)
     {
         return new UserDto

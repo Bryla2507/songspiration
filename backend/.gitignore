@@ -1,0 +1,7 @@
+[Bb]in/
+[Oo]bj/
+*.user
+
+*/obj/
+*/bin/
+*.gp5

@@ -11,9 +11,9 @@
       <div class="search-container">
         <div class="search-input-wrapper">
           <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            placeholder="Szukaj riffów, gatunków, instrumentów..."
+          <input 
+            type="text" 
+            placeholder="Szukaj riffów, gatunków, instrumentów..." 
             v-model="searchQuery"
             @input="handleSearch"
           />
@@ -22,46 +22,25 @@
 
       <!-- PRAWA STRONA: NAWIGACJA -->
       <div class="nav-actions">
-        <button class="btn-create" @click="openAddPinModal">+ Dodaj Pin</button>
+        <RouterLink to="/add-pin" class="btn-create">
+          + Dodaj Pin
+        </RouterLink>
         <div class="user-profile">
           <div class="avatar">JD</div>
         </div>
       </div>
     </div>
-
-    <!-- Add Pin Modal -->
-    <AddPinModal
-      :isOpen="showAddPinModal"
-      @close="closeAddPinModal"
-      @pin-added="handlePinAdded"
-    />
   </nav>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import AddPinModal from './AddPinModal.vue';
 
 const searchQuery = ref('');
-const showAddPinModal = ref(false);
-const emit = defineEmits(['search', 'pin-added']);
+const emit = defineEmits(['search']);
 
 const handleSearch = () => {
   emit('search', searchQuery.value);
-};
-
-const openAddPinModal = () => {
-  showAddPinModal.value = true;
-};
-
-const closeAddPinModal = () => {
-  showAddPinModal.value = false;
-};
-
-const handlePinAdded = (newPin) => {
-  // Emit event to parent that a new pin was added
-  emit('pin-added', newPin);
-  closeAddPinModal();
 };
 </script>
 

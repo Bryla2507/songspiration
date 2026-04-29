@@ -1,14 +1,14 @@
 <script setup>
 import TopBar from './components/TopBar.vue';
 import Pin from './components/Pin.vue';
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const pins = ref([
   {
     id: "1",
     title: "Deep Purple - Smoke on the water",
-    instrument: 0,
-    filePath: "/sample_pin.gp5",
+    instrument: 0, 
+    filePath: "/sample_pin.gp5", 
     pinGenres: [{ genre: { name: "Rock" } }, { genre: { name: "Classic" } }]
   },
   {
@@ -38,55 +38,21 @@ const handleSearch = (query) => {
   console.log("Szukam:", query);
 };
 
-const handlePinAdded = (newPin) => {
-  // Add the new pin to the beginning of the list
-  pins.value.unshift({
-    id: newPin.id,
-    title: newPin.title,
-    instrument: newPin.instrument,
-    filePath: newPin.filename,
-    pinGenres: newPin.pinGenres || []
-  });
-};
+onMounted(()=>{
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-// Load initial pins from API
-const loadPins = async () => {
-  try {
-    const response = await fetch('/api/pins');
-    if (response.ok) {
-      const apiPins = await response.json();
-      if (apiPins.length > 0) {
-        pins.value = apiPins.map(pin => ({
-          id: pin.id,
-          title: pin.title,
-          instrument: pin.instrument,
-          filePath: pin.filename,
-          pinGenres: pin.pinGenres || []
-        }));
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load pins:', error);
-  }
-};
+  console.log("API URL:", apiUrl);
+})
 
-onMounted(() => {
-  loadPins();
-});
 </script>
 
 <template>
-  <div class="app-wrapper">
-    <TopBar @search="handleSearch" @pin-added="handlePinAdded" />
-    
-    <main class="main-content">
-      <div class="pin-grid">
-        <Pin 
-          v-for="item in pins" 
-          :key="item.id" 
-          :pin="item" 
-        />
-      </div>
+  <div class="app-container">
+    <!-- Twój pasek nawigacji jest tutaj na stałe -->
+
+    <!-- Tutaj będą się zmieniać widoki (Home, Add Pin itd.) -->
+    <main>
+      <RouterView />
     </main>
   </div>
 </template>

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using SongSpiration.BLL.DTOs;
 
@@ -9,4 +10,7 @@ public interface IUserService
     Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
     Task<UserDto?> GetProfileAsync(Guid userId);
     Task<UserDto> UpdateProfileAsync(Guid userId, UserDto updateDto);
+    
+    // TA LINIA JEST KLUCZOWA:
+    Task<bool> DeleteAccountAsync(Guid userId);
 }
