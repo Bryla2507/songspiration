@@ -38,9 +38,12 @@ jobs:
             echo "Warning: SongSpiration.db not found!"
           fi
 
-      # 4. Pakowanie TYLKO Dockerfile i gotowego folderu publish
+# 4. Przygotowanie paczki: Kopiujemy Dockerfile do folderu publish i pakujemy ZAWARTOŚĆ folderu
       - name: Generate Deployment Package
-        run: zip -r deploy.zip Dockerfile publish/
+        run: |
+          cp Dockerfile publish/
+          cd publish
+          zip -r ../deploy.zip .
 
       # 5. Wysyłka do AWS Elastic Beanstalk
       - name: Deploy to EB
