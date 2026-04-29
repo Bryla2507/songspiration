@@ -19,15 +19,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore songspiration.sln -r linux-x64
 
-      # 2. Publish projektu API (flaga --no-restore jest ok, bo zrobiliśmy to wyżej)
+# Uproszczony krok publish (jeśli Plan A zawiedzie)
       - name: dotnet publish
         run: |
           dotnet publish backend/SongSpiration.API/SongSpiration.API.csproj \
             -c Release \
             -o publish \
             -r linux-x64 \
-            --self-contained false \
-            --no-restore
+            --self-contained false
 
       # 3. Kopiowanie bazy danych (poprawiona ścieżka)
       - name: Copy Database
