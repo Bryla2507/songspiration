@@ -15,11 +15,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 1. Przywracanie wszystkich zależności NuGet
+      # 1. Restore na pliku solucji w root (to pobierze AutoMappera dla BLL)
       - name: Restore dependencies
-        run: dotnet restore backend/SongSpiration.API/SongSpiration.API.csproj -r linux-x64
+        run: dotnet restore songspiration.sln -r linux-x64
 
-      # 2. Budowanie gotowej paczki (linux-x64) bezpośrednio na GitHubie
+      # 2. Publish projektu API (flaga --no-restore jest ok, bo zrobiliśmy to wyżej)
       - name: dotnet publish
         run: |
           dotnet publish backend/SongSpiration.API/SongSpiration.API.csproj \
@@ -29,23 +29,22 @@ jobs:
             --self-contained false \
             --no-restore
 
-      # 3. Kopiowanie bazy danych do folderu publikacji
+      # 3. Kopiowanie bazy danych (poprawiona ścieżka)
       - name: Copy Database
         run: |
           if [ -f "backend/SongSpiration.API/SongSpiration.db" ]; then
             cp backend/SongSpiration.API/SongSpiration.db publish/
-          else
-            echo "Warning: SongSpiration.db not found!"
           fi
 
-# 4. Przygotowanie paczki: Kopiujemy Dockerfile do folderu publish i pakujemy ZAWARTOŚĆ folderu
+      # 4. Przygotowanie paczki dla Elastic Beanstalk
+      # Kopiujemy Dockerfile do środka folderu publish, żeby Docker widział pliki DLL obok siebie
       - name: Generate Deployment Package
         run: |
           cp Dockerfile publish/
           cd publish
           zip -r ../deploy.zip .
 
-      # 5. Wysyłka do AWS Elastic Beanstalk
+      # 5. Wysyłka do AWS
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v22
         with:
