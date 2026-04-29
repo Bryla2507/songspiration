@@ -44,6 +44,24 @@ songspiration/
 
 ## 🎯 Plany i Cele
 
+### **Rozszerzony Model Danych**
+W ramach rozszerzenia specyfikacji projektowej dodano następujące encje:
+
+- **Playlist**: Lista utworów utworzona przez użytkownika.
+- **PlaylistPin**: Tabela łącznikowa dla relacji many-to-many między `Playlist` a `Pin`.
+- **Comment**: Komentarze do utworów.
+- **Follow**: Obserwowanie użytkowników.
+
+#### **Diagram Klas**
+![Diagram Klas](specs/model/class-diagram.puml)
+
+> **Opis nowych encji:**
+> - **Playlist**: Zawiera informacje o liście utworów, takie jak tytuł, opis, widoczność oraz data utworzenia.
+> - **PlaylistPin**: Łączy `Playlist` z `Pin`, umożliwiając dodawanie utworów do playlist.
+> - **Comment**: Umożliwia użytkownikom dodawanie komentarzy do utworów.
+> - **Follow**: Umożliwia użytkownikom obserwowanie innych użytkowników.
+
+
 ### **Architektura Systemu**
 Projekt opiera się na **architekturze warstwowej**, która zapewnia:
 - **Separację odpowiedzialności** (warstwa prezentacji, logiki biznesowej, dostępu do danych).
