@@ -125,8 +125,7 @@ namespace SongSpiration.DAL.Migrations
                 columns: table => new
                 {
                     PinId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    GenreId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    GenreId1 = table.Column<Guid>(type: "TEXT", nullable: true)
+                    GenreId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,11 +136,6 @@ namespace SongSpiration.DAL.Migrations
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PinGenres_Genres_GenreId1",
-                        column: x => x.GenreId1,
-                        principalTable: "Genres",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PinGenres_Pins_PinId",
                         column: x => x.PinId,
@@ -164,11 +158,6 @@ namespace SongSpiration.DAL.Migrations
                 name: "IX_PinGenres_GenreId",
                 table: "PinGenres",
                 column: "GenreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PinGenres_GenreId1",
-                table: "PinGenres",
-                column: "GenreId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pins_OwnerId",

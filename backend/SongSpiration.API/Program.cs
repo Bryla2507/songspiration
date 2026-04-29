@@ -1,42 +1,83 @@
 using SongSpiration.BLL;
-using SongSpiration.BLL.DTOs;
-using SongSpiration.BLL.Interfaces;
 using SongSpiration.DAL;
-using SongSpiration.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models; // <-- Kluczowy using dla Swaggera
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Kontrolery i Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SongSpiration API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SongSpiration API", Version = "v1" });
+
+    // Definicja zabezpieczeń (Naprawia błędy CS0246, CS0103)
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
-// Add DAL with SQLite database
+// 2. Baza Danych (SQLite)
+// 2. Baza Danych (SQLite)
 builder.Services.AddSongSpirationDal(options =>
 {
-    // Use SQLite database for both development and production
-    var databasePath = Path.Combine(Directory.GetCurrentDirectory(), "SongSpiration.db");
-    options.UseSqlite($"Data Source={databasePath}");
+    // Pobiera string z appsettings.json, który wcześniej uzupełniliśmy
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Add BLL services
+// 3. Logika biznesowa (Serwisy)
 builder.Services.AddSongSpirationBll();
 
-// Configure CORS
+// 4. Autentykacja i Autoryzacja
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TWOJ_BARDZO_DLUGI_I_TAJNY_KLUCZ_MIN_32_ZNAKI"))
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// 5. CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // Allow frontend origin
+        policy.WithOrigins("http://localhost:5173") 
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -44,48 +85,27 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- Middleware Pipeline ---
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => 
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SongSpiration API V1");
+    });
 }
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles(); // Enable static file serving
+// Serwowanie plików z wwwroot/uploads
+app.UseStaticFiles(); 
 
-// Serve frontend files from the frontend/dist directory
-var frontendPath = Path.Combine(Directory.GetCurrentDirectory(), "../../frontend/dist");
-if (Directory.Exists(frontendPath))
-{
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(frontendPath),
-        RequestPath = ""
-    });
+app.UseCors();
 
-    // Serve .gp5 files specifically
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(frontendPath),
-        RequestPath = "",
-        ContentTypeProvider = new FileExtensionContentTypeProvider
-        {
-            Mappings = { [".gp5"] = "application/octet-stream" }
-        }
-    });
-}
+app.UseAuthentication(); 
+app.UseAuthorization();
 
-app.UseCors(); // Use the CORS policy
-
-app.MapControllers(); // Map controllers
-
-// Add fallback to serve index.html for client-side routing
-app.MapFallbackToFile("index.html", new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(frontendPath),
-    RequestPath = ""
-});
+app.MapControllers();
 
 app.Run();

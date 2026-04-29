@@ -20,43 +20,68 @@ public class PinService : IPinService
     }
 
     public async Task<PinDto> CreatePinAsync(Guid ownerId, CreatePinDto createDto)
+{
+    var pin = new Pin
     {
-        var pin = new Pin
-        {
-            Id = Guid.NewGuid(),
-            OwnerId = ownerId,
-            Title = createDto.Title,
-            Description = createDto.Description,
-            Visibility = createDto.Visibility,
-            Instrument = Instrument.Guitar, // Default instrument
-            Filename = "default.gp", // Default filename
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        Id = Guid.NewGuid(),
+        OwnerId = ownerId,
+        Title = createDto.Title,
+        Description = createDto.Description,
+        Visibility = createDto.Visibility,
+        Instrument = createDto.Instrument,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow,
+        PinGenres = new List<PinGenre>()
+    };
 
-        // Handle file information if provided
-        if (!string.IsNullOrEmpty(createDto.TempFileLocation) && System.IO.File.Exists(createDto.TempFileLocation))
-        {
-            var fileInfo = new FileInfo(createDto.TempFileLocation);
-            pin.FilePath = createDto.TempFileLocation;
-            pin.MimeType = "application/octet-stream"; // Default mime type for binary files
-            pin.Size = fileInfo.Length;
-            pin.Checksum = ""; // In a real app, you would calculate a checksum here
-        }
-        else
-        {
-            // Default values if no file is provided
-            pin.FilePath = "default.gp";
-            pin.MimeType = "application/octet-stream";
-            pin.Size = 0;
-            pin.Checksum = "";
-        }
+    if (!string.IsNullOrEmpty(createDto.TempFileLocation) && System.IO.File.Exists(createDto.TempFileLocation))
+    {
+        var fileInfo = new FileInfo(createDto.TempFileLocation);
+        pin.FilePath = createDto.TempFileLocation;
+        pin.Filename = fileInfo.Name;
+        pin.MimeType = "application/octet-stream";
+        pin.Size = fileInfo.Length;
+        pin.Checksum = Guid.NewGuid().ToString("N");
+    }
 
+    try 
+    {
+        // KROK 1: Zapis samych danych podstawowych
         await _pinRepository.AddAsync(pin);
         await _pinRepository.SaveChangesAsync();
+        Console.WriteLine($">>> SUKCES: Pin {pin.Id} zapisany dla OwnerId: {ownerId}");
 
-        return MapToDto(pin);
+        // KROK 2: Dodanie gatunków
+        if (createDto.GenreIds != null && createDto.GenreIds.Any())
+        {
+            foreach (var gId in createDto.GenreIds)
+            {
+                pin.PinGenres.Add(new PinGenre 
+                { 
+                    PinId = pin.Id, 
+                    GenreId = gId 
+                });
+            }
+            
+            await _pinRepository.SaveChangesAsync();
+            Console.WriteLine($">>> SUKCES: Powiązano {createDto.GenreIds.Count} gatunków.");
+        }
+
+        var pinWithDetails = await _pinRepository.GetByIdWithDetailsAsync(pin.Id);
+        return MapToDto(pinWithDetails ?? pin);
     }
+    catch (Exception ex)
+    {
+        // Szczegółowy log w terminalu
+        Console.WriteLine("!!!!!!!!!! BŁĄD ZAPISU DO BAZY !!!!!!!!!!");
+        Console.WriteLine(ex.ToString()); 
+        
+        if (System.IO.File.Exists(createDto.TempFileLocation))
+            System.IO.File.Delete(createDto.TempFileLocation);
+            
+        throw;
+    }
+}
 
     public async Task<PinDto?> GetPinByIdAsync(Guid pinId)
     {
@@ -64,28 +89,23 @@ public class PinService : IPinService
         return pin != null ? MapToDto(pin) : null;
     }
 
+    public async Task<IEnumerable<PinDto>> GetAllPinsAsync()
+    {
+        var pins = await _pinRepository.GetPinsAsync();
+        return pins.Select(MapToDto);
+    }
+
     public async Task<PinDto> UpdatePinAsync(Guid pinId, UpdatePinDto updateDto)
     {
         var existingPin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
         if (existingPin == null)
         {
-            throw new KeyNotFoundException($"Pin with ID {pinId} not found.");
+            throw new KeyNotFoundException($"Pin o ID {pinId} nie istnieje.");
         }
 
-        if (updateDto.Title != null)
-        {
-            existingPin.Title = updateDto.Title;
-        }
-
-        if (updateDto.Description != null)
-        {
-            existingPin.Description = updateDto.Description;
-        }
-
-        if (updateDto.Visibility != null)
-        {
-            existingPin.Visibility = updateDto.Visibility.Value;
-        }
+        if (updateDto.Title != null) existingPin.Title = updateDto.Title;
+        if (updateDto.Description != null) existingPin.Description = updateDto.Description;
+        if (updateDto.Visibility != null) existingPin.Visibility = updateDto.Visibility.Value;
 
         existingPin.UpdatedAt = DateTime.UtcNow;
         _pinRepository.Update(existingPin);
@@ -94,24 +114,19 @@ public class PinService : IPinService
         return MapToDto(existingPin);
     }
 
-    public async Task<bool> DeletePinAsync(Guid pinId)
-    {
-        var pin = await _pinRepository.GetByIdAsync(pinId);
-        if (pin == null)
-        {
-            return false;
-        }
+   public async Task<bool> DeletePinAsync(Guid pinId)
+{
+    // 1. Sprawdzamy, czy rekord już jest w pamięci podręcznej (Local)
+    // To zapobiega konfliktowi "already being tracked"
+    var existingPin = await _pinRepository.GetByIdAsync(pinId);
 
-        _pinRepository.Remove(pin);
-        await _pinRepository.SaveChangesAsync();
-        return true;
-    }
+    if (existingPin == null) return false;
 
-    public async Task<IEnumerable<PinDto>> GetAllPinsAsync()
-    {
-        var pins = await _pinRepository.GetPinsAsync();
-        return pins.Select(MapToDto);
-    }
+    // 2. Usuwamy
+    _pinRepository.Remove(existingPin);
+    await _pinRepository.SaveChangesAsync();
+    return true;
+}
 
     public async Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId)
     {
@@ -121,9 +136,7 @@ public class PinService : IPinService
 
     public async Task<IEnumerable<PinDto>> GetPinsByBoardIdAsync(Guid boardId)
     {
-        // For now, return empty list as board functionality is not fully implemented
-        // In a real implementation, this would filter pins by board ID
-        return new List<PinDto>();
+        return await Task.FromResult(Enumerable.Empty<PinDto>());
     }
 
     private PinDto MapToDto(Pin pin)
@@ -139,7 +152,11 @@ public class PinService : IPinService
             Filename = pin.Filename,
             Size = pin.Size,
             CreatedAt = pin.CreatedAt,
-            Genres = pin.PinGenres?.Select(pg => pg.Genre?.Name ?? "").ToList() ?? new List<string>()
+            // Pobieramy nazwy gatunków z załadowanych relacji
+            Genres = pin.PinGenres?
+                .Where(pg => pg.Genre != null)
+                .Select(pg => pg.Genre!.Name)
+                .ToList() ?? new List<string>()
         };
     }
 }

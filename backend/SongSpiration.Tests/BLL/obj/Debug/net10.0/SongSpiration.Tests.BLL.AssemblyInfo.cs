@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SongSpiration.Tests.BLL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1347fda153f16612f91f44530677a5a7776fba43")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+370d2b474d8f4a50fd8d36b823c4dc720d86f14b")]
 [assembly: System.Reflection.AssemblyProductAttribute("SongSpiration.Tests.BLL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SongSpiration.Tests.BLL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
