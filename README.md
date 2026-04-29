@@ -20,23 +20,11 @@ songspiration/
 ```
 
 ### **Co jest już zrobione?**
-
-#### **Etap 1**
 1. **Modele danych** – Zdefiniowane encje (`User`, `Pin`, `Genre`, `Like`, `AuthToken`, `PinGenre`) oraz enumeracje (`Instrument`, `PinVisibility`, `TokenType`).
 2. **Interfejsy serwisów** – Zdefiniowane interfejsy dla `PinService` i `UserService` w warstwie BLL.
 3. **DTOs** – Modele transferu danych dla pinów (`PinDtos`) i użytkowników (`UserDtos`).
 4. **Struktura projektu** – Podział na warstwy (API, BLL, DAL, Models).
 5. **Specyfikacja** – Pliki `spec.md`, `class-diagram.puml`, `db-erd.puml` opisujące wymagania i modele danych.
-
-#### **Etap 2**
-1. **Rozszerzony model danych** – Dodano nowe encje: `Playlist`, `PlaylistPin`, `Comment`, `Follow`.
-2. **Diagramy klas UML** – Zaktualizowano diagramy klas, aby uwzględnić nowe encje i relacje.
-3. **Diagramy UML dla warstwy BLL** – Utworzono diagram klas i sekwencji dla warstwy Business Logic Layer.
-4. **Implementacje serwisów BLL** – Zaimplementowano `LikeService`, `CollectionService`, i `FilterService`.
-5. **Testy jednostkowe dla BLL** – Utworzono testy jednostkowe dla `LikeService`, `CollectionService`, i `FilterService`.
-6. **Implementacja kontrolerów REST** – Przygotowano kontrolery usługi REST (WebApi) korzystające z obiektów warstwy BLL i DAL.
-7. **Frontend** – Zaimplementowano frontend współpracujący z przynajmniej jednym kontrolerem.
-8. **Wdrożenie** – Osadzono pierwszą wersję systemu (DB+Backend+Frontend) na ogólnodostępnym serwerze WWW.
 
 ### **Co zostało do zrobienia?**
 | Warstwa          | Zadania                                                                 |
@@ -55,23 +43,6 @@ songspiration/
 ---
 
 ## 🎯 Plany i Cele
-
-### **Rozszerzony Model Danych**
-W ramach rozszerzenia specyfikacji projektowej dodano następujące encje:
-
-- **Playlist**: Lista utworów utworzona przez użytkownika.
-- **PlaylistPin**: Tabela łącznikowa dla relacji many-to-many między `Playlist` a `Pin`.
-- **Comment**: Komentarze do utworów.
-- **Follow**: Obserwowanie użytkowników.
-
-#### **Diagram Klas**
-![Diagram Klas](specs/model/class-diagram.puml)
-
-> **Opis nowych encji:**
-> - **Playlist**: Zawiera informacje o liście utworów, takie jak tytuł, opis, widoczność oraz data utworzenia.
-> - **PlaylistPin**: Łączy `Playlist` z `Pin`, umożliwiając dodawanie utworów do playlist.
-> - **Comment**: Umożliwia użytkownikom dodawanie komentarzy do utworów.
-> - **Follow**: Umożliwia użytkownikom obserwowanie innych użytkowników.
 
 ### **Architektura Systemu**
 Projekt opiera się na **architekturze warstwowej**, która zapewnia:
@@ -110,6 +81,14 @@ Projekt opiera się na **architekturze warstwowej**, która zapewnia:
 - **Przykłady użycia**:
   - Utworzenie diagramu architektury systemu (patrz sekcja [Diagram Architektury](#diagram-architektury)).
   - Opis aktualnego stanu projektu i planów rozwoju.
+
+### **3. Współpraca z Zespołem**
+| Osoba       | Zakres Odpowiedzialności                                  | Współpraca z AI                          |
+|-------------|----------------------------------------------------------|------------------------------------------|
+| **Ola**     | Architektura, dokumentacja, wsparcie AI.                | Cline (planowanie), Copilot (kod).       |
+| **Filip**   | Warstwa Logiki Biznesowej (BLL), testy jednostkowe.      | Copilot (generowanie testów).           |
+| **Oskar**   | Warstwa Dostępu do Danych (DAL), specyfikacja systemu.  | Cline (analiza modeli), Copilot (kod).  |
+| **Kacper**  | Dokumentacja, modele, diagramy UML.                      | Cline (generowanie diagramów).          |
 
 ---
 
@@ -154,6 +133,17 @@ Projekt opiera się na **architekturze warstwowej**, która zapewnia:
    dotnet run
    ```
    API będzie dostępne pod adresem: `https://localhost:5001` lub `http://localhost:5000`.
+
+---
+
+## 📂 Podział Pracy
+
+| Osoba       | Zadania                                                                 |
+|-------------|------------------------------------------------------------------------|
+| **Ola**     | Architektura, dokumentacja, wsparcie AI, koordynacja zespołu.         |
+| **Filip**   | Implementacja serwisów (BLL) i testów jednostkowych.                  |
+| **Oskar**   | Implementacja repozytoriów (DAL) i migracji bazy danych.              |
+| **Kacper**  | Dokumentacja projektowa, diagramy UML, modele danych.                 |
 
 ---
 
