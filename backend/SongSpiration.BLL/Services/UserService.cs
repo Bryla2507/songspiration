@@ -154,7 +154,8 @@ public class UserService : IUserService
         _dbContext.AuthTokens.Add(authToken);
         await _dbContext.SaveChangesAsync();
 
-        var resetLink = $"http://localhost:5173/reset-password?token={resetToken}";
+        var frontendUrl = _configuration["FrontendUrl"]?.TrimEnd('/') ?? "http://localhost:5173";
+        var resetLink = $"{frontendUrl}/reset-password?token={resetToken}";
         var message = $"<p>Reset Password: <a href='{resetLink}'>Link</a></p>";
 
         if (_emailSender != null) await _emailSender.SendEmailAsync(user.Email, "SongSpiration - Password Reset", message);

@@ -46,7 +46,11 @@ const handleForgotPassword = async () => {
     if (response.ok) {
       successMessage.value = 'Jeśli konto istnieje, link do resetu hasła został wysłany na podany adres e-mail.';
     } else {
-      errorMessage.value = 'Wystąpił błąd podczas wysyłania żądania.';
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (e) {}
+      errorMessage.value = data.message || 'Wystąpił błąd podczas wysyłania żądania.';
     }
   } catch (error) {
     console.error('Błąd:', error);

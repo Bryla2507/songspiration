@@ -35,7 +35,7 @@ public class EmailSender : IEmailSender
             // For dev/testing with services like mailtrap, StartTls is typical.
             // If using a service that doesn't support it or for local testing, 
             // you might need SecureSocketOptions.Auto or None.
-            await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
+            await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.Auto);
             
             if (!string.IsNullOrEmpty(_emailSettings.User) && !string.IsNullOrEmpty(_emailSettings.Password))
             {
@@ -49,7 +49,7 @@ public class EmailSender : IEmailSender
         {
             // In a real application, you'd log this exception
             Console.WriteLine($"Failed to send email: {ex.Message}");
-            throw new InvalidOperationException("Could not send email.", ex);
+            throw new InvalidOperationException($"Could not send email: {ex.Message}", ex);
         }
     }
 }
