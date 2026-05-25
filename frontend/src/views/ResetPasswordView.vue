@@ -54,6 +54,11 @@ const handleResetPassword = async () => {
     return;
   }
 
+  if (password.value.length < 6) {
+    errorMessage.value = 'Hasło musi mieć co najmniej 6 znaków.';
+    return;
+  }
+
   if (!token.value) {
     errorMessage.value = 'Brakujący token resetowania hasła.';
     return;

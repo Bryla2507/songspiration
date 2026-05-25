@@ -11,6 +11,9 @@
           <label for="password">Hasło</label>
           <input v-model="form.password" type="password" id="password" required placeholder="Wpisz hasło..." />
         </div>
+        <div class="forgot-password">
+          <RouterLink to="/forgot-password">Zapomniałeś hasła?</RouterLink>
+        </div>
         <div v-if="errorMessage" class="error-msg">{{ errorMessage }}</div>
         <button type="submit" :disabled="isLoading" class="btn-submit">
           {{ isLoading ? 'Logowanie...' : 'Zaloguj się' }}
