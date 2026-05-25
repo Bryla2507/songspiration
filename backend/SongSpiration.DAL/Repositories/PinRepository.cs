@@ -43,18 +43,36 @@ public class PinRepository : IPinRepository
             .Include(p => p.Likes)
             .FirstOrDefaultAsync(p => p.Id == id);
 
-    public async Task<IEnumerable<Pin>> GetPinsAsync(int skip = 0, int take = 50)
+    public async Task<IEnumerable<Pin>> GetPinsAsync(int skip, int take, string? search, string? instrument, string? genre, string? sortBy, string? sortOrder)
     {
-        return await _db.Pins
-            .AsNoTracking()
+        var query = _db.Pins
             .Include(p => p.Owner)
             .Include(p => p.PinGenres)
                 .ThenInclude(pg => pg.Genre)
             .Include(p => p.Likes)
-            .OrderByDescending(p => p.CreatedAt)
-            .Skip(skip)
-            .Take(take)
-            .ToListAsync();
+            .AsQueryable();
+
+        // Filtering
+        if (!string.IsNullOrEmpty(search))
+            query = query.Where(p => p.Title.Contains(search) || (p.Description != null && p.Description.Contains(search)));
+
+        if (!string.IsNullOrEmpty(instrument) && instrument != "all")
+            if (int.TryParse(instrument, out int instVal))
+                query = query.Where(p => (int)p.Instrument == instVal);
+
+        if (!string.IsNullOrEmpty(genre) && genre != "all")
+            query = query.Where(p => p.PinGenres.Any(pg => pg.Genre.Name == genre));
+
+        // Sorting
+        bool isDesc = sortOrder?.ToLower() != "asc";
+        query = sortBy?.ToLower() switch
+        {
+            "alpha" => isDesc ? query.OrderByDescending(p => p.Title) : query.OrderBy(p => p.Title),
+            "likes" => isDesc ? query.OrderByDescending(p => p.Likes.Count) : query.OrderBy(p => p.Likes.Count),
+            _ => isDesc ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt)
+        };
+
+        return await query.AsNoTracking().Skip(skip).Take(take).ToListAsync();
     }
 
     public async Task<bool> ToggleLikeAsync(Guid userId, Guid pinId)

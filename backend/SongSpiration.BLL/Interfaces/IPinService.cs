@@ -11,7 +11,7 @@ public interface IPinService
     Task<PinDto?> GetPinByIdAsync(Guid pinId);
     Task<PinDto> UpdatePinAsync(Guid pinId, UpdatePinDto updateDto);
     Task<bool> DeletePinAsync(Guid pinId);
-    Task<IEnumerable<PinDto>> GetAllPinsAsync();
+    Task<IEnumerable<PinDto>> GetAllPinsAsync(int start, int limit, string? search, string? instrument, string? genre, string? sortBy, string? sortOrder);
     Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId);
     Task<IEnumerable<PinDto>> GetPinsByBoardIdAsync(Guid boardId);
     Task<(bool IsLiked, int LikeCount)> ToggleLikeAsync(Guid userId, Guid pinId);

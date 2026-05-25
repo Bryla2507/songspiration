@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue';
+import { ref, onMounted, onUnmounted, computed, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import TopBar from '@/components/TopBar.vue';
 import Pin from '@/components/Pin.vue';
@@ -8,6 +8,12 @@ const pins = ref([]);
 const loading = ref(true);
 const apiUrl = import.meta.env.VITE_API_URL;
 const router = useRouter();
+
+// --- PAGINACJA ---
+const start = ref(0);
+const limit = 6; // Zwiększyłem limit dla lepszego UX
+const hasMore = ref(true);
+const loadingMore = ref(false);
 
 // --- STAN FILTRÓW ---
 const filters = reactive({
@@ -25,47 +31,47 @@ const instrumentMap = {
   2: 'Perkusja'
 };
 
-// Pobieranie unikalnych gatunków z pobranych pinów
-const availableGenres = computed(() => {
-  const genres = new Set();
-  pins.value.forEach(pin => {
-    pin.pinGenres.forEach(pg => genres.add(pg.genre.name));
-  });
-  return Array.from(genres).sort();
-});
+const availableGenres = ref([]);
+
+const fetchGenres = async () => {
+  try {
+    const response = await fetch(`${apiUrl}/api/Genre`);
+    if (!response.ok) throw new Error('Błąd pobierania gatunków');
+    const data = await response.json();
+    availableGenres.value = data.map(g => g.name).sort();
+  } catch (error) {
+    console.error("Błąd podczas pobierania gatunków z API:", error);
+  }
+};
 
 // --- LOGIKA FILTROWANIA ---
 const filteredPins = computed(() => {
-  let result = pins.value.filter(pin => {
-    const matchesSearch = pin.title.toLowerCase().includes(filters.search.toLowerCase());
-    const matchesInstrument = filters.instrument === 'all' || pin.instrument.toString() === filters.instrument;
-    const matchesGenre = filters.genre === 'all' || pin.pinGenres.some(pg => pg.genre.name === filters.genre);
-    
-    return matchesSearch && matchesInstrument && matchesGenre;
-  });
-
-  // LOGIKA SORTOWANIA
-  if (filters.sortBy === 'alpha') {
-    result.sort((a, b) => filters.sortOrder === 'asc' 
-      ? a.title.localeCompare(b.title) 
-      : b.title.localeCompare(a.title));
-  } else if (filters.sortBy === 'likes') {
-    result.sort((a, b) => filters.sortOrder === 'desc'
-      ? (b.likeCount || 0) - (a.likeCount || 0)
-      : (a.likeCount || 0) - (b.likeCount || 0));
-  } else if (filters.sortBy === 'newest') {
-    result.sort((a, b) => filters.sortOrder === 'desc'
-      ? new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-      : new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
-  }
-
-  return result;
+  return pins.value;
 });
 
-const fetchPins = async () => {
+const fetchPins = async (reset = false) => {
+  if (loadingMore.value || (!hasMore.value && !reset)) return;
+
+  loadingMore.value = true;
+  if (reset) {
+    start.value = 0;
+    hasMore.value = true;
+  }
+
   try {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${apiUrl}/api/Pins`, {
+    
+    const queryParams = new URLSearchParams({
+      start: start.value,
+      limit: limit,
+      search: filters.search,
+      instrument: filters.instrument,
+      genre: filters.genre,
+      sortBy: filters.sortBy,
+      sortOrder: filters.sortOrder
+    });
+
+    const response = await fetch(`${apiUrl}/api/Pins?${queryParams.toString()}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     
@@ -78,18 +84,25 @@ const fetchPins = async () => {
     const data = await response.json();
     const likedPins = JSON.parse(localStorage.getItem('likedPins') || '[]');
 
-    pins.value = data.map(pin => ({
+    const newPins = data.map(pin => ({
       ...pin,
       filePath: `${apiUrl}/api/Pins/files/${pin.filename}`,
       pinGenres: pin.genres.map(g => ({ genre: { name: g } })),
       isLiked: likedPins.includes(pin.id)
     }));
 
+    if (reset) pins.value = newPins;
+    else pins.value.push(...newPins);
+
+    start.value += data.length;
+    if (data.length < limit) hasMore.value = false;
+
   } catch (error) {
     console.error("Błąd:", error);
-    loadMockData();
+    if (reset) loadMockData();
   } finally {
     loading.value = false;
+    loadingMore.value = false;
   }
 };
 
@@ -122,15 +135,34 @@ const getVisitorId = () => {
   return id;
 };
 
+// Obsługa scrolla
+const handleScroll = () => {
+  const bottomOfWindow = document.documentElement.scrollTop + window.innerHeight >= document.documentElement.offsetHeight - 200;
+  if (bottomOfWindow && !loadingMore.value && hasMore.value) {
+    fetchPins();
+  }
+};
+
+// Resetuj paginację gdy zmieniają się filtry
+watch(() => [filters.instrument, filters.genre, filters.sortBy, filters.sortOrder], () => {
+  fetchPins(true);
+});
+
 onMounted(() => {
   // Inicjalizacja visitorId
   getVisitorId();
+  fetchGenres();
+  window.addEventListener('scroll', handleScroll);
 
   if (apiUrl) fetchPins();
   else {
     loadMockData();
     loading.value = false;
   }
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -196,10 +228,13 @@ onMounted(() => {
       </div>
 
       <!-- Loader -->
-      <div v-if="loading" class="loader">Ładowanie riffów...</div>
+      <div v-if="loading" class="loader">
+        <div class="spinner"></div>
+        <span>Ładowanie riffów...</span>
+      </div>
 
       <!-- Komunikat o braku wyników -->
-      <div v-else-if="filteredPins.length === 0" class="no-results">
+      <div v-else-if="filteredPins.length === 0 && !loadingMore" class="no-results">
         Nie znaleziono pinów spełniających kryteria.
       </div>
 
@@ -210,6 +245,11 @@ onMounted(() => {
           :key="item.id" 
           :pin="item" 
         />
+      </div>
+
+      <div v-if="loadingMore && !loading" class="scroll-loader">
+        <div class="spinner small"></div>
+        <span>Wczytywanie kolejnych utworów...</span>
       </div>
     </main>
   </div>
@@ -276,6 +316,41 @@ onMounted(() => {
   padding: 50px;
   font-size: 1.2rem;
   color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.scroll-loader {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-style: italic;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2ecc71;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner.small {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .main-content {

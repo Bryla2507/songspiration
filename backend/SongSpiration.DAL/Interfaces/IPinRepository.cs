@@ -9,7 +9,7 @@ public interface IPinRepository
 {
     Task<Pin?> GetByIdAsync(Guid id);
     Task<Pin?> GetByIdWithDetailsAsync(Guid id);
-    Task<IEnumerable<Pin>> GetPinsAsync(int skip = 0, int take = 50);
+    Task<IEnumerable<Pin>> GetPinsAsync(int skip, int take, string? search, string? instrument, string? genre, string? sortBy, string? sortOrder);
     Task AddAsync(Pin pin);
     void Update(Pin pin);
     void Remove(Pin pin);

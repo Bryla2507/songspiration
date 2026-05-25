@@ -21,9 +21,16 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PinDto>>> GetPins()
+        public async Task<ActionResult<IEnumerable<PinDto>>> GetPins(
+            [FromQuery] int start = 0, 
+            [FromQuery] int limit = 6,
+            [FromQuery] string? search = null,
+            [FromQuery] string? instrument = null,
+            [FromQuery] string? genre = null,
+            [FromQuery] string? sortBy = "newest",
+            [FromQuery] string? sortOrder = "desc")
         {
-            var pins = await _pinService.GetAllPinsAsync();
+            var pins = await _pinService.GetAllPinsAsync(start, limit, search, instrument, genre, sortBy, sortOrder);
             return Ok(pins);
         }
 
