@@ -6,5 +6,6 @@
 */bin/
 *.gp5
 
-appsettings.json
-appsettings.Development.json
+SongSpiration.API/appsettings.json
+
+SongSpiration.API/appsettings.Development.json
