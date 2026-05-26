@@ -15,6 +15,7 @@ namespace SongSpiration.Models.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsEmailVerified { get; set; }
+        public bool IsEditorChoice { get; set; } = false;
 
         // Navigation properties
         public ICollection<Pin> Pins { get; set; } = new List<Pin>();

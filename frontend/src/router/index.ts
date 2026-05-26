@@ -42,6 +42,11 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      name: 'ranking',
+      path: '/ranking',
+      component: () => import('@/views/RankingView.vue'),
+    },
+    {
       name: 'admin-login',
       path: '/admin/login',
       component: () => import('@/views/AdminLoginView.vue'),

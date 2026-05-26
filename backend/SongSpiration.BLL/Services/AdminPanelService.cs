@@ -147,5 +147,18 @@ namespace SongSpiration.BLL.Services
         {
             await _userRepository.DeleteUserPinsAsync(userId);
         }
+
+        public async Task SetEditorChoiceAsync(Guid userId, bool isEditorChoice)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            user.IsEditorChoice = isEditorChoice;
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+        }
     }
 }

@@ -22,6 +22,9 @@
         <button @click="deleteUser(user.id)">Delete</button>
         <button @click="banUser(user.id)" v-if="!user.isBanned">Ban</button>
         <button @click="deleteUserPins(user.id)">Delete Pins</button>
+        <button @click="toggleEditorChoice(user)" :class="{ active: user.isEditorChoice }">
+          {{ user.isEditorChoice ? 'Remove Editor Choice' : 'Set Editor Choice' }}
+        </button>
       </td>
     </tr>
       </tbody>
@@ -38,6 +41,7 @@ interface User {
   displayName: string;
   email: string;
   isBanned: boolean;
+  isEditorChoice: boolean;
 }
 
 export default {
@@ -68,7 +72,7 @@ export default {
 
     const banUser = async (id: string) => {
       try {
-        await axios.post(`/api/admin/users/${id}/ban`);
+        await axios.put(`/api/admin/users/${id}/ban`); // Updated to PUT as per AdminPanelController
         await fetchUsers();
       } catch (error) {
         console.error('Error banning user:', error);
@@ -81,6 +85,18 @@ export default {
         alert('User pins deleted successfully');
       } catch (error) {
         console.error('Error deleting user pins:', error);
+      }
+    };
+
+    const toggleEditorChoice = async (user: User) => {
+      try {
+        const newValue = !user.isEditorChoice;
+        await axios.put(`/api/admin/users/${user.id}/editor-choice`, newValue, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        await fetchUsers();
+      } catch (error) {
+        console.error('Error toggling editor choice:', error);
       }
     };
 
@@ -100,6 +116,7 @@ export default {
       deleteUser,
       banUser,
       deleteUserPins,
+      toggleEditorChoice,
     };
   },
 };
@@ -146,5 +163,10 @@ button {
 
 button:hover {
   background-color: #c82333;
+}
+
+button.active {
+  background-color: #ffc107;
+  color: black;
 }
 </style>

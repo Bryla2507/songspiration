@@ -19,5 +19,6 @@ namespace SongSpiration.BLL.Interfaces
         Task<List<EntitiesUser>> SearchUsersAsync(string searchTerm);
         Task BanUserAsync(Guid userId);
         Task DeletePinsForUserAsync(Guid userId);
+        Task SetEditorChoiceAsync(Guid userId, bool isEditorChoice);
     }
 }

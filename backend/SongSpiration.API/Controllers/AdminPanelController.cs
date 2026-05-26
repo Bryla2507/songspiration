@@ -85,5 +85,12 @@ namespace SongSpiration.API.Controllers
             await _adminPanelService.DeletePinsForUserAsync(userId);
             return NoContent();
         }
+
+        [HttpPut("users/{userId}/editor-choice")]
+        public async Task<ActionResult> SetEditorChoiceAsync(Guid userId, [FromBody] bool isEditorChoice)
+        {
+            await _adminPanelService.SetEditorChoiceAsync(userId, isEditorChoice);
+            return NoContent();
+        }
     }
 }

@@ -18,5 +18,6 @@ public interface IPinRepository
     Task<int> GetTotalLikesReceivedByUserIdAsync(Guid userId);
     Task<IEnumerable<Pin>> GetPinsByUserIdAsync(Guid userId);  
     Task<IEnumerable<Guid>> GetValidGenreIdsAsync(IEnumerable<Guid> genreIds);
+    Task IncrementDownloadCountAsync(Guid pinId);
     Task<int> SaveChangesAsync();
 }

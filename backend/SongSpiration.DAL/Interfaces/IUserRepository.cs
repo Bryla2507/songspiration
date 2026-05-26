@@ -16,4 +16,7 @@ public interface IUserRepository
     Task<IEnumerable<User>> SearchUsersAsync(string criteria);
     Task BanUserAsync(Guid userId);
     Task DeleteUserPinsAsync(Guid userId);
+    Task<IEnumerable<User>> GetEditorChoiceUsersAsync(int limit);
+    Task<IEnumerable<User>> GetUsersByMostLikesAsync(int limit);
+    Task<IEnumerable<User>> GetUsersByMostDownloadsAsync(int limit);
 }
