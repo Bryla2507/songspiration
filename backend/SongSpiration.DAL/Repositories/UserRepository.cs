@@ -65,4 +65,34 @@ public class UserRepository : IUserRepository
         _db.Pins.RemoveRange(pins);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<User>> GetEditorChoiceUsersAsync(int limit)
+    {
+        return await _db.Users
+            .AsNoTracking()
+            .Where(u => u.IsEditorChoice)
+            .Take(limit)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<User>> GetUsersByMostLikesAsync(int limit)
+    {
+        return await _db.Users
+            .AsNoTracking()
+            .Include(u => u.Pins)
+            .ThenInclude(p => p.Likes)
+            .OrderByDescending(u => u.Pins.SelectMany(p => p.Likes).Count())
+            .Take(limit)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<User>> GetUsersByMostDownloadsAsync(int limit)
+    {
+        return await _db.Users
+            .AsNoTracking()
+            .Include(u => u.Pins)
+            .OrderByDescending(u => u.Pins.Sum(p => p.DownloadsCount))
+            .Take(limit)
+            .ToListAsync();
+    }
 }

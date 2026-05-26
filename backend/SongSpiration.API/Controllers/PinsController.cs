@@ -142,6 +142,23 @@ namespace SongSpiration.API.Controllers
             return File(fileStream, "application/octet-stream", filename);
         }
 
+        [HttpGet("{id}/download")]
+        public async Task<IActionResult> DownloadPinFile(Guid id)
+        {
+            var pin = await _pinService.GetPinByIdAsync(id);
+            if (pin == null || string.IsNullOrEmpty(pin.Filename)) return NotFound();
+
+            var fileNameOnly = Path.GetFileName(pin.Filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileNameOnly);
+            
+            if (!System.IO.File.Exists(filePath)) return NotFound();
+
+            await _pinService.IncrementDownloadCountAsync(id);
+
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(fileStream, "application/octet-stream", pin.Filename);
+        }
+
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<PinDto>>> GetUserPins(Guid userId)
         {

@@ -17,6 +17,7 @@ namespace SongSpiration.Models.Entities
         public string MimeType { get; set; } = string.Empty;
         public long Size { get; set; }
         public string Checksum { get; set; } = string.Empty;
+        public int DownloadsCount { get; set; } = 0;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public ICollection<PinGenre> PinGenres { get; set; } = new List<PinGenre>();

@@ -102,6 +102,6 @@ input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16
 .btn-submit:disabled { background: #95a5a6; cursor: not-allowed; }
 .error-msg { color: #e74c3c; font-size: 14px; text-align: center; }
 .success-msg { color: #2ecc71; font-size: 14px; text-align: center; padding: 20px; background: #e8f8f5; border-radius: 6px; }
-.login-link { color: #3498db; text-decoration: none; font-weight: bold; }
+.login-link { color: #2ecc71; text-decoration: none; font-weight: bold; }
 .login-link:hover { text-decoration: underline; }
 </style>

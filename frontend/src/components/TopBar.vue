@@ -8,6 +8,9 @@
 
 
       <div class="nav-actions">
+        <RouterLink to="/ranking" class="btn-ranking">
+          🏆 Ranking
+        </RouterLink>
         <RouterLink to="/add-pin" class="btn-create">
           + Dodaj Pin
         </RouterLink>
@@ -174,6 +177,25 @@ onMounted(fetchUserData);
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.btn-ranking {
+  background: #f0f0f0;
+  color: #2ecc71;
+  border: 2px solid #2ecc71;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-ranking:hover {
+  background: #2ecc71;
+  color: white;
+  transform: translateY(-1px);
 }
 
 .btn-create {

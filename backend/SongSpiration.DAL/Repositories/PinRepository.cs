@@ -108,5 +108,12 @@ public class PinRepository : IPinRepository
             .ToListAsync();
     }
 
+    public async Task IncrementDownloadCountAsync(Guid pinId)
+    {
+        await _db.Pins
+            .Where(p => p.Id == pinId)
+            .ExecuteUpdateAsync(s => s.SetProperty(p => p.DownloadsCount, p => p.DownloadsCount + 1));
+    }
+
     public Task<int> SaveChangesAsync() => _db.SaveChangesAsync();
 }

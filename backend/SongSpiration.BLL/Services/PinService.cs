@@ -118,12 +118,16 @@ if (createDto.GenreIds != null && createDto.GenreIds.Any())
     {
         return await Task.FromResult(Enumerable.Empty<PinDto>());
     }
+public async Task<(bool IsLiked, int LikeCount)> ToggleLikeAsync(Guid userId, Guid pinId)
+{
+    var isLiked = await _pinRepository.ToggleLikeAsync(userId, pinId);
+    var updatedPin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
+    return (isLiked, updatedPin?.Likes.Count ?? 0);
+}
 
-    public async Task<(bool IsLiked, int LikeCount)> ToggleLikeAsync(Guid userId, Guid pinId)
+    public async Task IncrementDownloadCountAsync(Guid pinId)
     {
-        bool isLiked = await _pinRepository.ToggleLikeAsync(userId, pinId);
-        var pin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
-        return (isLiked, pin?.Likes?.Count ?? 0);
+        await _pinRepository.IncrementDownloadCountAsync(pinId);
     }
 
     private PinDto MapToDto(EntitiesPin pin)
