@@ -29,7 +29,10 @@
 
     <!-- WIDOK TABULATURY -->
     <div class="tab-viewport">
-      <div ref="atElement"></div>
+      <div v-if="!pin.filePath || !pin.filePath.startsWith('http')" class="missing-file-message">
+        🎵 Plik tabulatury niedostępny
+      </div>
+      <div v-else ref="atElement"></div>
     </div>
   </div>
 </template>
@@ -65,6 +68,12 @@ const getInstrumentName = (id) => {
 };
 
 onMounted(() => {
+  // Handle missing files gracefully
+  if (!props.pin.filePath || !props.pin.filePath.startsWith('http')) {
+    console.warn(`Missing or invalid file path for pin: ${props.pin.title}`);
+    return;
+  }
+
   api.value = new alphaTab.AlphaTabApi(atElement.value, {
     file: props.pin.filePath,
     player: {
@@ -77,7 +86,7 @@ onMounted(() => {
     //   staveProfile: 'Tab',
       layoutMode: 'horizontal',
       resources: {
-        fontDirectory: '/font/' 
+        fontDirectory: '/font/'
       }
     }
   });
@@ -270,6 +279,18 @@ onUnmounted(() => {
   overflow-x: auto;
   background: #fff;
   min-height: 180px;
+}
+
+.missing-file-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-style: italic;
+  font-size: 16px;
+  padding: 20px;
+  text-align: center;
 }
 
 :deep(.at-cursor) {

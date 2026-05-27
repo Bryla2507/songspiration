@@ -86,7 +86,7 @@ const fetchPins = async (reset = false) => {
 
     const newPins = data.map(pin => ({
       ...pin,
-      filePath: `${apiUrl}/api/Pins/files/${pin.filename}`,
+      filePath: `${apiUrl}${pin.filePath}`,
       pinGenres: pin.genres.map(g => ({ genre: { name: g } })),
       isLiked: likedPins.includes(pin.id)
     }));
