@@ -1,0 +1,38 @@
+@startuml
+title Diagram Sekwencji - Pobranie Rankingu Użytkowników (Top Likes)
+
+actor "Klient (Vue 3 / Browser)" as Client
+participant "RankingController" as Controller
+participant "RankingService" as Service
+participant "UserRepository" as Repository
+database "SQL Server (EF Core)" as DB
+
+Client -> Controller : GET /api/Ranking/likes?limit=10
+activate Controller
+
+Controller -> Service : GetTopByLikesAsync(10)
+activate Service
+
+Service -> Repository : GetUsersByMostLikesAsync(10)
+activate Repository
+
+Repository -> DB : Złożone zapytanie LINQ\n(Include Pins, Likes,\nOrderByDescending Count, Take 10)
+activate DB
+DB --> Repository : Lista<User> (wraz z Pins i Likes)
+deactivate DB
+
+Repository --> Service : IEnumerable<User>
+deactivate Repository
+
+Service -> Service : MapToDto(users)\nWyliczenie TotalLikes i TotalDownloads
+activate Service
+Service --> Service : IEnumerable<UserRankingDto>
+deactivate Service
+
+Service --> Controller : IEnumerable<UserRankingDto>
+deactivate Service
+
+Controller --> Client : 200 OK + JSON (Lista UserRankingDto)
+deactivate Controller
+
+@enduml
