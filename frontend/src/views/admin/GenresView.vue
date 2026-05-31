@@ -123,6 +123,7 @@ export default {
 
     const deleteGenre = async (id: string) => {
       try {
+        await axios.delete(`/api/Genre/${id}`, getAxiosConfig());
         genres.value = genres.value.filter(genre => genre.id !== id);
       } catch (error) {
         console.error('Error deleting genre:', error);

@@ -34,5 +34,15 @@ namespace SongSpiration.BLL.Services
             await _genreRepository.SaveChangesAsync();
             return genre;
         }
+
+        public async Task DeleteGenreAsync(Guid id)
+        {
+            var genre = await _genreRepository.GetByIdAsync(id);
+            if (genre != null)
+            {
+                _genreRepository.Remove(genre);
+                await _genreRepository.SaveChangesAsync();
+            }
+        }
     }
 }

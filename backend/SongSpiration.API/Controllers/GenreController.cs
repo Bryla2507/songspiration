@@ -30,5 +30,12 @@ namespace SongSpiration.API.Controllers
             var createdGenre = await _genreService.AddGenreAsync(genreDto);
             return CreatedAtAction(nameof(GetAllGenres), new { id = createdGenre.Id }, createdGenre);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGenre(Guid id)
+        {
+            await _genreService.DeleteGenreAsync(id);
+            return NoContent();
+        }
     }
 }
