@@ -7,11 +7,12 @@
     </nav>
 
     <div class="profile-container" v-if="user">
-      <ProfileHeader 
-        :user="user" 
-        @edit="showEditModal = true" 
-        @change-avatar="handleAvatarClick" 
-        @delete="showDeleteModal = true" 
+      <ProfileHeader
+        :user="user"
+        @edit="showEditModal = true"
+        @change-avatar="handleAvatarClick"
+        @report="showReportModal = true"
+        @delete="showDeleteModal = true"
       />
 
       <PinGrid 
@@ -76,6 +77,13 @@
         </div>
       </div>
     </div>
+
+    <ReportModal
+      v-if="showReportModal"
+      :userId="route.params.id"
+      @close="showReportModal = false"
+      @success="fetchData"
+    />
   </div>
 </template>
 
@@ -83,10 +91,11 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 // Sprawdź czy plik na dysku nazywa się ProfileHeader.vue
-import ProfileHeader from '@/components/profile/ProfileHeader.vue'; 
-import PinGrid from '@/components/profile/PinGrid.vue';
-import EditProfileModal from '@/components/modals/EditProfileModal.vue';
-import TabPlayerModal from '@/components/modals/TabPlayerModal.vue';
+import ProfileHeader from '@/components/profile/ProfileHeader.vue';
+      import PinGrid from '@/components/profile/PinGrid.vue';
+      import EditProfileModal from '@/components/modals/EditProfileModal.vue';
+      import TabPlayerModal from '@/components/modals/TabPlayerModal.vue';
+      import ReportModal from '@/components/modals/ReportModal.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -94,10 +103,11 @@ const user = ref(null);
 const pins = ref([]);
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const showDeleteModal = ref(false);
-const showEditModal = ref(false);
-const showAvatarModal = ref(false);
-const showApiModal = ref(false);
+      const showDeleteModal = ref(false);
+      const showEditModal = ref(false);
+      const showAvatarModal = ref(false);
+      const showApiModal = ref(false);
+      const showReportModal = ref(false);
 const isDragging = ref(false);
 const selectedFile = ref(null);
 const fileInput = ref(null);

@@ -13,6 +13,7 @@ public class SongSpirationDbContext : DbContext
     public DbSet<PinGenre> PinGenres { get; set; } = null!;
     public DbSet<Like> Likes { get; set; } = null!;
     public DbSet<AuthToken> AuthTokens { get; set; } = null!;
+    public DbSet<Report> Reports { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
@@ -51,6 +52,19 @@ public class SongSpirationDbContext : DbContext
         .HasOne(l => l.Pin)
         .WithMany(p => p.Likes)
         .HasForeignKey(l => l.PinId);
+
+    // Report relations
+    modelBuilder.Entity<Report>()
+        .HasOne(r => r.ReportedUser)
+        .WithMany()
+        .HasForeignKey(r => r.ReportedUserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    modelBuilder.Entity<Report>()
+        .HasOne(r => r.ReportingUser)
+        .WithMany()
+        .HasForeignKey(r => r.ReportingUserId)
+        .OnDelete(DeleteBehavior.Restrict);
 
     // FIX DLA SQLITE: Konwersja Guid na string (małe litery)
     // To zapewnia, że baza zawsze znajdzie ID, niezależnie od formatu
