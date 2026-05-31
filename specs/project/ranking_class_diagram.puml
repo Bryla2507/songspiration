@@ -1,0 +1,93 @@
+@startuml
+title Diagram Klas - System Rankingu i Relacji (Polubienia, Editor's Choice)
+skinparam classAttributeIconSize 0
+
+package "SongSpiration.Models.Entities" {
+    class User {
+        + Guid Id
+        + string DisplayName
+        + bool IsEditorChoice
+        + ICollection<Pin> Pins
+        + ICollection<Like> Likes
+    }
+
+    class Pin {
+        + Guid Id
+        + string Title
+        + Guid OwnerId
+        + int DownloadsCount
+        + ICollection<Like> Likes
+    }
+
+    class Like {
+        + Guid UserId
+        + Guid PinId
+        + DateTime CreatedAt
+    }
+
+    User "1" --> "0..*" Pin : Owner
+    User "1" --> "0..*" Like : Leaves
+    Pin "1" --> "0..*" Like : Receives
+}
+
+package "SongSpiration.BLL.DTOs" {
+    class UserRankingDto {
+        + Guid Id
+        + string DisplayName
+        + string AvatarUrl
+        + bool IsEditorChoice
+        + int TotalLikes
+        + int TotalDownloads
+    }
+}
+
+package "SongSpiration.DAL.Interfaces" {
+    interface IUserRepository {
+        + Task<IEnumerable<User>> GetEditorChoiceUsersAsync(int limit)
+        + Task<IEnumerable<User>> GetUsersByMostLikesAsync(int limit)
+        + Task<IEnumerable<User>> GetUsersByMostDownloadsAsync(int limit)
+    }
+}
+
+package "SongSpiration.DAL.Repositories" {
+    class UserRepository {
+        - SongSpirationDbContext _db
+        + Task<IEnumerable<User>> GetEditorChoiceUsersAsync(int limit)
+        + Task<IEnumerable<User>> GetUsersByMostLikesAsync(int limit)
+        + Task<IEnumerable<User>> GetUsersByMostDownloadsAsync(int limit)
+    }
+    IUserRepository <|.. UserRepository
+}
+
+package "SongSpiration.BLL.Interfaces" {
+    interface IRankingService {
+        + Task<IEnumerable<UserRankingDto>> GetEditorsChoiceAsync(int limit)
+        + Task<IEnumerable<UserRankingDto>> GetTopByDownloadsAsync(int limit)
+        + Task<IEnumerable<UserRankingDto>> GetTopByLikesAsync(int limit)
+    }
+}
+
+package "SongSpiration.BLL.Services" {
+    class RankingService {
+        - IUserRepository _userRepository
+        + Task<IEnumerable<UserRankingDto>> GetEditorsChoiceAsync(int limit)
+        + Task<IEnumerable<UserRankingDto>> GetTopByDownloadsAsync(int limit)
+        + Task<IEnumerable<UserRankingDto>> GetTopByLikesAsync(int limit)
+        - IEnumerable<UserRankingDto> MapToDto(IEnumerable<User> users)
+    }
+    IRankingService <|.. RankingService
+    RankingService --> IUserRepository
+    RankingService ..> UserRankingDto : creates
+}
+
+package "SongSpiration.API.Controllers" {
+    class RankingController {
+        - IRankingService _rankingService
+        + Task<ActionResult<IEnumerable<UserRankingDto>>> GetEditorsChoice(int limit)
+        + Task<ActionResult<IEnumerable<UserRankingDto>>> GetTopByLikes(int limit)
+        + Task<ActionResult<IEnumerable<UserRankingDto>>> GetTopByDownloads(int limit)
+    }
+    RankingController --> IRankingService
+}
+
+@enduml

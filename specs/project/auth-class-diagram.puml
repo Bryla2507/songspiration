@@ -6,6 +6,8 @@ package "API Layer" {
         - _userService: IUserService
         + Register(dto: RegisterRequestDto): Task<IActionResult>
         + Login(dto: LoginRequestDto): Task<IActionResult>
+        + ForgotPassword(dto: ForgotPasswordDto): Task<IActionResult>
+        + ResetPassword(dto: ResetPasswordDto): Task<IActionResult>
     }
 }
 
@@ -13,6 +15,8 @@ package "BLL Layer (Logika Biznesowa)" {
     interface IUserService {
         + RegisterUserAsync(dto: RegisterRequestDto): Task<bool>
         + AuthenticateUserAsync(dto: LoginRequestDto): Task<AuthResponseDto>
+        + ForgotPasswordAsync(dto: ForgotPasswordDto): Task
+        + ResetPasswordAsync(dto: ResetPasswordDto): Task
     }
     
     class UserService {
@@ -21,6 +25,8 @@ package "BLL Layer (Logika Biznesowa)" {
         - GenerateJwtToken(user: User): string
         - HashPassword(password: string): string
         - VerifyPassword(password: string, hash: string): bool
+        + ForgotPasswordAsync(dto: ForgotPasswordDto): Task
+        + ResetPasswordAsync(dto: ResetPasswordDto): Task
     }
 }
 

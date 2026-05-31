@@ -31,4 +31,30 @@ Service --> API: AuthResponseDto (Token JWT, User Info)
 API --> UI: HTTP 200 OK + Payload
 UI -> UI: Zapisz token w sessionStorage
 UI --> User: Przekierowanie na stronę główną (Feed)
+
+== Resetowanie Hasła ==
+User -> UI: Wybiera "Zapomniałem hasła" i wpisuje e-mail
+UI -> API: POST /api/Users/forgot-password (email)
+API -> Service: ForgotPasswordAsync()
+Service -> DB: Szukaj Użytkownika po e-mailu
+DB --> Service: Dane Użytkownika
+Service -> Service: Generowanie tokenu jednorazowego (Guid)
+Service -> DB: Zapisz token w tabeli AuthTokens z czasem wygaśnięcia
+DB --> Service: Sukces zapisu
+Service -> Service: Wysłanie e-maila z linkiem resetującym
+Service --> API: Sukces
+API --> UI: HTTP 200 OK (Nawet jeśli użytkownik nie istnieje - security)
+UI --> User: Komunikat o wysłaniu e-maila
+...
+User -> UI: Klika w link z e-maila i wpisuje nowe hasło
+UI -> API: POST /api/Users/reset-password (token, nowe hasło)
+API -> Service: ResetPasswordAsync()
+Service -> DB: Szukaj aktywnego i ważnego tokenu
+DB --> Service: Dane Tokenu i Użytkownika
+Service -> Service: Hashowanie nowego hasła (BCrypt)
+Service -> DB: Zapisz nowe hasło i unieważnij token (IsRevoked=true)
+DB --> Service: Sukces zapisu
+Service --> API: Sukces
+API --> UI: HTTP 200 OK
+UI --> User: Komunikat o udanym resecie i przekierowanie do logowania
 @enduml

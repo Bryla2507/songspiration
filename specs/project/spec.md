@@ -30,21 +30,27 @@
 * **Filtrowanie po Gatunku:** Możliwość kategoryzowania pinów według gatunków muzycznych.
 * **Sortowanie:** Sortowanie po popularności, polubieniach lub według daty publikacji.
 
+### 3.4. System Rankingu i Relacji Użytkowników
+* **Ranking po polubieniach:** Zestawienie użytkowników, których piny zgromadziły sumarycznie najwięcej polubień.
+* **Ranking po pobraniach:** Zestawienie twórców, których piny są najczęściej pobierane (zliczana wartość `DownloadsCount`).
+* **Wybór Redakcji (Editor's Choice):** Prestiżowe wyróżnienie przyznawane przez administratorów systemu określonym użytkownikom (flaga `IsEditorChoice`).
+* **Relacje i interakcje:** System pozwala na tworzenie relacji polubień (`Like`) między użytkownikiem a pinem, wpływając bezpośrednio na algorytmy rankingowe.
+
 ---
 
 ## 4. Zadania Warstwy Logiki Biznesowej
-* **Service Layer:** Implementacja serwisów `UserService`, `PinService` oraz `CollectionService`.
-* **Unit Testing:** Testy rejestracji, mechanizmu filtrowania oraz zapisu plików.
+* **Service Layer:** Implementacja serwisów `UserService`, `PinService`, `CollectionService` oraz `RankingService`.
+* **Unit Testing:** Testy rejestracji, mechanizmu filtrowania, zapisu plików, a także metod kalkulacji agregacji dla rankingu (np. `RankingServiceTests`).
 
 ---
 
 ## 5. Model Danych (Wysokopoziomowy)
 | Tabela | Opis |
 |---|---|
-| `User` | Dane konta, profil (display_name, avatar), role. |
-| `Pin` | Metadane pina, właściciel, lokalizacja pliku `.gp`. |
+| `User` | Dane konta, profil (display_name, avatar), role, flaga `IsEditorChoice`. |
+| `Pin` | Metadane pina, właściciel, lokalizacja pliku `.gp`, licznik pobrań `DownloadsCount`. |
 | `Genre` | Lista gatunków muzycznych. |
-| `Like` | Relacja polubień użytkownik ↔ pin. |
+| `Like` | Relacja polubień użytkownik ↔ pin z datą utworzenia. |
 
 ---
 
@@ -106,6 +112,7 @@ Filtrowanie odbywa się reaktywnie po stronie klienta na zestawie danych pobrany
 
 - **Logowanie (`LoginView`):** Formularz logowania e-mailem i hasłem. Po pomyślnym zalogowaniu, aplikacja zapisuje token `JWT` i nazwę użytkownika w `sessionStorage`, by w prawym górnym rogu strony wyświetlać inicjały użytkownika.
 - **Rejestracja (`RegisterView`):** Samodzielny widok zbierający wymagane dane użytkownika, posiadający walidację długości i struktury hasła, z możliwością przejścia do logowania po sukcesie.
+- **Resetowanie hasła (`ForgotPasswordView`, `ResetPasswordView`):** Widoki umożliwiające podanie adresu e-mail do wysyłki linku resetującego, a następnie odebranie parametru token z adresu URL i wymuszenie bezpiecznego wprowadzenia oraz potwierdzenia nowego hasła.
 
 - **Profil użytkownika:**
   - nagłówek profilu: awatar, `display_name`, krótki opis/bio (opcjonalne), statystyki (liczba dodanych pinów, suma polubień otrzymanych, liczba kolekcji)
@@ -139,3 +146,5 @@ Obecnie zarejestrowane decyzje:
 * **[ADR-0004](../adr/0004-use-ef-core-and-sql-server.md):** Użycie MS SQL Server oraz Entity Framework Core
 * **[ADR-0005](../adr/0005-use-jwt-for-stateless-auth.md):** Użycie JWT (JSON Web Tokens) do bezstanowej autoryzacji
 * **[ADR-0006](../adr/0006-use-alphatab-for-score-rendering.md):** Użycie biblioteki AlphaTab do renderowania tabulatur
+* **[ADR-0007](../adr/0007-user-ranking-and-relations.md):** Implementacja Systemu Rankingu i Relacji Użytkowników
+* **[ADR-0008](../adr/0008-password-reset-functionality.md):** Implementacja Bezpiecznego Resetu Hasła
