@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using SongSpiration.BLL.DTOs;
@@ -39,6 +40,106 @@ public class UserServiceTests
             null!, // Assuming DbContext is not used in Register/Login
             _mockConfiguration.Object
         );
+    }
+
+    private SongSpirationDbContext GetInMemoryDbContext()
+    {
+        var options = new DbContextOptionsBuilder<SongSpirationDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+        return new SongSpirationDbContext(options);
+    }
+
+    [Fact]
+    public async Task ForgotPasswordAsync_ShouldGenerateTokenAndSendEmail_WhenUserExists()
+    {
+        // Arrange
+        var dbContext = GetInMemoryDbContext();
+        var user = new User { Id = Guid.NewGuid(), Email = "reset@example.com" };
+        _mockUserRepository.Setup(x => x.GetByEmailAsync(user.Email)).ReturnsAsync(user);
+
+        var service = new UserService(
+            _mockUserRepository.Object,
+            _mockPinRepository.Object,
+            _mockEmailSender.Object,
+            dbContext,
+            _mockConfiguration.Object
+        );
+
+        var dto = new ForgotPasswordDto { Email = "reset@example.com" };
+
+        // Act
+        await service.ForgotPasswordAsync(dto);
+
+        // Assert
+        var token = await dbContext.AuthTokens.FirstOrDefaultAsync(t => t.UserId == user.Id);
+        Assert.NotNull(token);
+        Assert.Equal(SongSpiration.Models.TokenType.PasswordReset, token.TokenType);
+        _mockEmailSender.Verify(x => x.SendEmailAsync(user.Email, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldUpdatePasswordAndRevokeToken_WhenTokenIsValid()
+    {
+        // Arrange
+        var dbContext = GetInMemoryDbContext();
+        var user = new User { Id = Guid.NewGuid(), Email = "reset@example.com", PasswordHash = "oldHash" };
+        dbContext.Users.Add(user);
+        
+        var authToken = new AuthToken 
+        { 
+            Id = Guid.NewGuid(), 
+            UserId = user.Id, 
+            User = user,
+            TokenHash = "valid-token", 
+            TokenType = SongSpiration.Models.TokenType.PasswordReset, 
+            ExpiryDate = DateTime.UtcNow.AddHours(1),
+            IsRevoked = false 
+        };
+        dbContext.AuthTokens.Add(authToken);
+        await dbContext.SaveChangesAsync();
+
+        var service = new UserService(
+            _mockUserRepository.Object,
+            _mockPinRepository.Object,
+            _mockEmailSender.Object,
+            dbContext,
+            _mockConfiguration.Object
+        );
+
+        var dto = new ResetPasswordDto { Token = "valid-token", NewPassword = "NewPassword123!" };
+
+        // Act
+        await service.ResetPasswordAsync(dto);
+
+        // Assert
+        var updatedUser = await dbContext.Users.FindAsync(user.Id);
+        var updatedToken = await dbContext.AuthTokens.FindAsync(authToken.Id);
+        
+        Assert.NotEqual("oldHash", updatedUser!.PasswordHash);
+        Assert.True(BCrypt.Net.BCrypt.Verify(dto.NewPassword, updatedUser.PasswordHash));
+        Assert.True(updatedToken!.IsRevoked);
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldThrowException_WhenTokenIsInvalidOrExpired()
+    {
+        // Arrange
+        var dbContext = GetInMemoryDbContext();
+        
+        var service = new UserService(
+            _mockUserRepository.Object,
+            _mockPinRepository.Object,
+            _mockEmailSender.Object,
+            dbContext,
+            _mockConfiguration.Object
+        );
+
+        var dto = new ResetPasswordDto { Token = "invalid-token", NewPassword = "NewPassword123!" };
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ResetPasswordAsync(dto));
+        Assert.Equal("Invalid or expired reset token.", exception.Message);
     }
 
     [Fact]
