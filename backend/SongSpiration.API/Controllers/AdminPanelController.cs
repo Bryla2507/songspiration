@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SongSpiration.BLL.Services;
+using SongSpiration.BLL.Interfaces;
 using SongSpiration.Models;
 using SongSpiration.BLL.DTOs;
 using System;
@@ -16,9 +17,9 @@ namespace SongSpiration.API.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminPanelController : ControllerBase
     {
-        private readonly AdminPanelService _adminPanelService;
+        private readonly IAdminPanelService _adminPanelService;
 
-        public AdminPanelController(AdminPanelService adminPanelService)
+        public AdminPanelController(IAdminPanelService adminPanelService)
         {
             _adminPanelService = adminPanelService;
         }
@@ -97,6 +98,27 @@ namespace SongSpiration.API.Controllers
         public async Task<ActionResult> BanUserAsync(Guid userId)
         {
             await _adminPanelService.BanUserAsync(userId);
+            return NoContent();
+        }
+
+        [HttpPut("users/{userId}/unban")]
+        public async Task<ActionResult> UnbanUserAsync(Guid userId)
+        {
+            await _adminPanelService.UnbanUserAsync(userId);
+            return NoContent();
+        }
+
+        [HttpPut("users/{userId}/promote")]
+        public async Task<ActionResult> PromoteToAdminAsync(Guid userId)
+        {
+            await _adminPanelService.PromoteToAdminAsync(userId);
+            return NoContent();
+        }
+
+        [HttpPut("users/{userId}/demote")]
+        public async Task<ActionResult> DemoteFromAdminAsync(Guid userId)
+        {
+            await _adminPanelService.DemoteFromAdminAsync(userId);
             return NoContent();
         }
 

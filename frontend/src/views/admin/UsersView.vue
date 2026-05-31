@@ -23,6 +23,9 @@
           <td>
             <button @click="deleteUser(user.id)">Delete</button>
             <button @click="banUser(user.id)" v-if="!user.isBanned">Ban</button>
+            <button @click="unbanUser(user.id)" v-if="user.isBanned">Unban</button>
+            <button @click="promoteToAdmin(user.id)" v-if="user.roles !== 'Admin'">Promote to Admin</button>
+            <button @click="demoteFromAdmin(user.id)" v-if="user.roles === 'Admin'">Demote</button>
             <button @click="deleteUserPins(user.id)">Delete Pins</button>
             <button @click="toggleEditorChoice(user)" :class="{ active: user.isEditorChoice }">
               {{ user.isEditorChoice ? 'Remove Editor Choice' : 'Set Editor Choice' }}
@@ -55,101 +58,44 @@ interface User {
 export default {
   name: 'UsersView',
   setup() {
-    const users = ref<User[]>([
-      {
-        id: 'a1b2c3d4-e5f6-7890-g1h2-i3j4k5l6m7n8',
-        displayName: 'adfag',
-        email: 'adfag@gmail.com',
-        isBanned: false,
-        isEditorChoice: false,
-        roles: 'User',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-01T00:00:00',
-        lastLogin: '2023-01-02T00:00:00',
-        isEmailVerified: true
-      },
-      {
-        id: 'b2c3d4e5-f6g7-8901-h2i3-j4k5l6m7n8o9',
-        displayName: 'lkjlj',
-        email: 'lkjlj@gmail.com',
-        isBanned: false,
-        isEditorChoice: false,
-        roles: 'User',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-03T00:00:00',
-        lastLogin: '2023-01-04T00:00:00',
-        isEmailVerified: true
-      },
-      {
-        id: 'c3d4e5f6-g7h8-9012-i3j4-k5l6m7n8o9p0',
-        displayName: 'hwajgha',
-        email: 'hwajgha@gmail.com',
-        isBanned: false,
-        isEditorChoice: false,
-        roles: 'User',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-05T00:00:00',
-        lastLogin: '2023-01-06T00:00:00',
-        isEmailVerified: true
-      },
-      {
-        id: 'd4e5f6g7-h8i9-0123-j4k5-l6m7n8o9p0q1',
-        displayName: 'qwerty',
-        email: 'qwerty@gmail.com',
-        isBanned: false,
-        isEditorChoice: false,
-        roles: 'User',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-07T00:00:00',
-        lastLogin: '2023-01-08T00:00:00',
-        isEmailVerified: true
-      },
-      {
-        id: 'e5f6g7h8-i9j0-1234-k5l6-m7n8o9p0q1r2',
-        displayName: 'bryla',
-        email: 'filipbry2507@gmail.com',
-        isBanned: false,
-        isEditorChoice: true,
-        roles: 'Admin',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-09T00:00:00',
-        lastLogin: '2023-01-10T00:00:00',
-        isEmailVerified: true
-      },
-      {
-        id: 'f6g7h8i9-j0k1-2345-l6m7-n8o9p0q1r2s3',
-        displayName: 'test',
-        email: 'test@test.com',
-        isBanned: false,
-        isEditorChoice: false,
-        roles: 'User',
-        avatarUrl: null,
-        bio: null,
-        createdAt: '2023-01-11T00:00:00',
-        lastLogin: '2023-01-12T00:00:00',
-        isEmailVerified: true
-      }
-    ]);
+    const users = ref<User[]>([]);
     const searchTerm = ref('');
     let searchTimeout: number | null = null;
 
-    const getAxiosConfig = () => {
-      const token = sessionStorage.getItem('token');
-      return {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-    };
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const fetchUsers = async () => {
-      // No need to fetch users from API, as they are hardcoded
+      try {
+        const token = sessionStorage.getItem('token');
+        console.log("Fetching users with token:", token ? "Token exists" : "No token");
+
+        const response = await axios.get(`${apiUrl}/api/users`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        console.log("Users fetched successfully:", response.data);
+        users.value = response.data.map((user: any) => ({
+          id: user.id,
+          displayName: user.displayName || user.username || user.email.split('@')[0],
+          email: user.email,
+          isBanned: user.roles === 'Banned',
+          isEditorChoice: user.isEditorChoice,
+          roles: user.roles,
+          avatarUrl: user.avatarUrl,
+          bio: user.bio,
+          createdAt: user.createdAt,
+          lastLogin: user.lastLogin,
+          isEmailVerified: user.isEmailVerified
+        }));
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error('Error fetching users:', error.response?.data || error.message);
+        } else {
+          console.error('Unexpected error:', error);
+        }
+      }
     };
 
     const onSearchInput = () => {
@@ -159,30 +105,109 @@ export default {
       searchTimeout = setTimeout(fetchUsers, 500) as unknown as number;
     };
 
-    const deleteUser = (id: string) => {
-      users.value = users.value.filter(user => user.id !== id);
-    };
-
-    const banUser = (id: string) => {
-      users.value = users.value.map(user => {
-        if (user.id === id) {
-          return { ...user, isBanned: true };
+    const getAxiosConfig = () => {
+      const token = sessionStorage.getItem('token');
+      return {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-        return user;
-      });
+      };
     };
 
-    const deleteUserPins = (id: string) => {
-      alert(`Pins for user with ID ${id} would be deleted (simulated)`);
+    const deleteUser = async (id: string) => {
+      try {
+        await axios.delete(`${apiUrl}/api/AdminPanel/users/${id}`, getAxiosConfig());
+        users.value = users.value.filter(user => user.id !== id);
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
     };
 
-    const toggleEditorChoice = (user: User) => {
-      users.value = users.value.map(u => {
-        if (u.id === user.id) {
-          return { ...u, isEditorChoice: !u.isEditorChoice };
-        }
-        return u;
-      });
+    const banUser = async (id: string) => {
+      try {
+        await axios.put(`${apiUrl}/api/AdminPanel/users/${id}/ban`, {}, getAxiosConfig());
+        users.value = users.value.map(user => {
+          if (user.id === id) {
+            return { ...user, isBanned: true, roles: 'Banned' };
+          }
+          return user;
+        });
+      } catch (error) {
+        console.error('Error banning user:', error);
+      }
+    };
+
+    const deleteUserPins = async (id: string) => {
+      try {
+        await axios.delete(`${apiUrl}/api/AdminPanel/users/${id}/pins`, getAxiosConfig());
+        alert(`Pins for user with ID ${id} have been deleted`);
+      } catch (error) {
+        console.error('Error deleting user pins:', error);
+      }
+    };
+
+    const toggleEditorChoice = async (user: User) => {
+      try {
+        const newStatus = !user.isEditorChoice;
+        const config = {
+          ...getAxiosConfig(),
+          headers: {
+            ...getAxiosConfig().headers,
+            'Content-Type': 'application/json'
+          }
+        };
+        await axios.put(`${apiUrl}/api/AdminPanel/users/${user.id}/editor-choice`, newStatus, config);
+        users.value = users.value.map(u => {
+          if (u.id === user.id) {
+            return { ...u, isEditorChoice: newStatus };
+          }
+          return u;
+        });
+      } catch (error) {
+        console.error('Error toggling editor choice:', error);
+      }
+    };
+
+    const unbanUser = async (id: string) => {
+      try {
+        await axios.put(`${apiUrl}/api/AdminPanel/users/${id}/unban`, {}, getAxiosConfig());
+        users.value = users.value.map(user => {
+          if (user.id === id) {
+            return { ...user, isBanned: false, roles: 'User' };
+          }
+          return user;
+        });
+      } catch (error) {
+        console.error('Error unbanning user:', error);
+      }
+    };
+
+    const promoteToAdmin = async (id: string) => {
+      try {
+        await axios.put(`${apiUrl}/api/AdminPanel/users/${id}/promote`, {}, getAxiosConfig());
+        users.value = users.value.map(user => {
+          if (user.id === id) {
+            return { ...user, roles: 'Admin' };
+          }
+          return user;
+        });
+      } catch (error) {
+        console.error('Error promoting user to admin:', error);
+      }
+    };
+
+    const demoteFromAdmin = async (id: string) => {
+      try {
+        await axios.put(`${apiUrl}/api/AdminPanel/users/${id}/demote`, {}, getAxiosConfig());
+        users.value = users.value.map(user => {
+          if (user.id === id) {
+            return { ...user, roles: 'User' };
+          }
+          return user;
+        });
+      } catch (error) {
+        console.error('Error demoting user from admin:', error);
+      }
     };
 
     const filteredUsers = computed(() => {
@@ -203,6 +228,9 @@ export default {
       filteredUsers,
       deleteUser,
       banUser,
+      unbanUser,
+      promoteToAdmin,
+      demoteFromAdmin,
       deleteUserPins,
       toggleEditorChoice,
       onSearchInput

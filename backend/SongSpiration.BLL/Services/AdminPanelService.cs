@@ -4,6 +4,8 @@ using SongSpiration.DAL;
 using EntitiesUser = SongSpiration.Models.Entities.User;
 using ModelsGenre = SongSpiration.Models.Genre;
 using EntitiesGenre = SongSpiration.Models.Entities.Genre;
+using EntitiesLike = SongSpiration.Models.Entities.Like;
+using EntitiesReport = SongSpiration.Models.Entities.Report;
 using SongSpiration.BLL.DTOs;
 using System;
 using System.Collections.Generic;
@@ -184,6 +186,19 @@ namespace SongSpiration.BLL.Services
                 throw new Exception("User not found");
             }
 
+            // Usuń wszystkie powiązane rekordy w Likes
+            var likes = _dbContext.Set<EntitiesLike>().Where(l => l.UserId == userId).ToList();
+            _dbContext.Set<EntitiesLike>().RemoveRange(likes);
+
+            // Usuń wszystkie powiązane rekordy w Reports (jako ReportedUser i ReportingUser)
+            var reportsAsReported = _dbContext.Set<EntitiesReport>().Where(r => r.ReportedUserId == userId).ToList();
+            var reportsAsReporting = _dbContext.Set<EntitiesReport>().Where(r => r.ReportingUserId == userId).ToList();
+            _dbContext.Set<EntitiesReport>().RemoveRange(reportsAsReported);
+            _dbContext.Set<EntitiesReport>().RemoveRange(reportsAsReporting);
+
+            // Usuń wszystkie piny użytkownika przed usunięciem konta
+            await DeletePinsForUserAsync(userId);
+
             _userRepository.Delete(user);
             await _userRepository.SaveChangesAsync();
         }
@@ -197,6 +212,45 @@ namespace SongSpiration.BLL.Services
             }
 
             user.Roles = "Banned";
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task UnbanUserAsync(Guid userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            user.Roles = "User";
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task PromoteToAdminAsync(Guid userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            user.Roles = "Admin";
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task DemoteFromAdminAsync(Guid userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            user.Roles = "User";
             _userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
         }

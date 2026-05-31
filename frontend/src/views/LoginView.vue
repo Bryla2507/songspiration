@@ -48,8 +48,12 @@ const handleLogin = async () => {
       body: JSON.stringify(form.value)
     });
 
-    if (response.ok) {
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.user && data.user.roles === 'Banned') {
+          throw new Error('This account has been banned and cannot log in.');
+        }
       // Zapisujemy token w sesji (zniknie po zamknięciu przeglądarki)
       sessionStorage.setItem('token', data.accessToken || data.token); // Dostosowane do AuthResponseDto z .NET
 

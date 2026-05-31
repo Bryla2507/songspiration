@@ -18,6 +18,9 @@ namespace SongSpiration.BLL.Interfaces
         Task DeleteGenreAsync(Guid genreId);
         Task<List<EntitiesUser>> SearchUsersAsync(string searchTerm);
         Task BanUserAsync(Guid userId);
+        Task UnbanUserAsync(Guid userId);
+        Task PromoteToAdminAsync(Guid userId);
+        Task DemoteFromAdminAsync(Guid userId);
         Task DeletePinsForUserAsync(Guid userId);
         Task SetEditorChoiceAsync(Guid userId, bool isEditorChoice);
     }

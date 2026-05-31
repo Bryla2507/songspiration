@@ -5,8 +5,8 @@ using SongSpiration.BLL.Interfaces;
 
 namespace SongSpiration.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+[ApiController]
+[Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -119,6 +119,23 @@ namespace SongSpiration.API.Controllers
             }
             catch (InvalidOperationException ex) { return BadRequest(new { message = ex.Message }); }
             catch { return StatusCode(500, new { message = "Błąd resetowania hasła." }); }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserProfileDto>>> GetAllUsers()
+        {
+            try
+            {
+                Console.WriteLine("GetAllUsers endpoint called.");
+                var users = await _userService.GetAllUsersAsync();
+                Console.WriteLine($"Fetched {users.Count()} users.");
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching users: {ex.Message}");
+                return StatusCode(500, new { message = "Wystąpił błąd podczas pobierania użytkowników." });
+            }
         }
     }
 }

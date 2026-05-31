@@ -209,6 +209,38 @@ public class UserService : IUserService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public async Task<IEnumerable<UserProfileDto>> GetAllUsersAsync()
+    {
+        Console.WriteLine("GetAllUsersAsync method called.");
+        var users = await _userRepository.GetAllAsync();
+        Console.WriteLine($"Retrieved {users.Count()} users from repository.");
+
+        var userProfiles = new List<UserProfileDto>();
+
+        foreach (var user in users)
+        {
+            var userProfile = new UserProfileDto
+            {
+                Id = user.Id,
+                DisplayName = user.DisplayName,
+                AvatarUrl = user.AvatarUrl,
+                Email = user.Email,
+                Bio = user.Bio,
+                AddedPinsCount = await _pinRepository.GetCountByUserIdAsync(user.Id),
+                TotalLikesReceived = await _pinRepository.GetTotalLikesReceivedByUserIdAsync(user.Id),
+                Roles = user.Roles,
+                IsEditorChoice = user.IsEditorChoice,
+                IsEmailVerified = user.IsEmailVerified,
+                CreatedAt = user.CreatedAt,
+                LastLogin = user.LastLogin
+            };
+            userProfiles.Add(userProfile);
+        }
+
+        Console.WriteLine($"Returning {userProfiles.Count} user profiles.");
+        return userProfiles;
+    }
+
     private UserDto MapToDto(EntitiesUser user)
     {
         return new UserDto
@@ -222,4 +254,4 @@ public class UserService : IUserService
             CreatedAt = user.CreatedAt
         };
     }
-}   
+}

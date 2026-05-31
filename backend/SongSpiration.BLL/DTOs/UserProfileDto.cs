@@ -10,4 +10,9 @@ public class UserProfileDto
     
     public int AddedPinsCount { get; set; }
     public int TotalLikesReceived { get; set; }
+    public string Roles { get; set; } = string.Empty;
+    public bool IsEditorChoice { get; set; }
+    public bool IsEmailVerified { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? LastLogin { get; set; }
 }

@@ -19,4 +19,5 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetEditorChoiceUsersAsync(int limit);
     Task<IEnumerable<User>> GetUsersByMostLikesAsync(int limit);
     Task<IEnumerable<User>> GetUsersByMostDownloadsAsync(int limit);
+    Task<IEnumerable<User>> GetAllAsync();
 }

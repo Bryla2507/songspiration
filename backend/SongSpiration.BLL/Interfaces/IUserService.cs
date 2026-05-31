@@ -14,4 +14,5 @@ public interface IUserService
     Task<bool> UpdateAvatarAsync(Guid userId, string avatarUrl);
     Task ForgotPasswordAsync(ForgotPasswordDto dto);
     Task ResetPasswordAsync(ResetPasswordDto dto);
+    Task<IEnumerable<UserProfileDto>> GetAllUsersAsync();
 }

@@ -59,6 +59,11 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<IEnumerable<User>> GetAllAsync()
+    {
+        return await _db.Users.AsNoTracking().ToListAsync();
+    }
+
     public async Task DeleteUserPinsAsync(Guid userId)
     {
         var pins = _db.Pins.Where(p => p.OwnerId == userId);
