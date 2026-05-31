@@ -1,0 +1,141 @@
+@startuml
+
+left to right direction
+
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+
+title Diagram klas - Funkcjonalność zgłaszania użytkowników
+
+class Report {
+  + Id: Guid
+  + ReportedUserId: Guid
+  + ReportingUserId: Guid
+  + Content: string
+}
+
+class IReportRepository {
+  + {abstract} AddAsync(Report report): Task
+  + {abstract} GetAllAsync(): Task<IEnumerable<Report>>
+  + {abstract} GetByIdAsync(Guid id): Task<Report>
+  + {abstract} DeleteAsync(Guid id): Task
+  + {abstract} SaveChangesAsync(): Task<int>
+}
+
+class ReportRepository {
+  + AddAsync(Report report): Task
+  + GetAllAsync(): Task<IEnumerable<Report>>
+  + GetByIdAsync(Guid id): Task<Report>
+  + DeleteAsync(Guid id): Task
+  + SaveChangesAsync(): Task<int>
+}
+
+class IReportService {
+  + {abstract} CreateReportAsync(CreateReportDto reportDto, Guid userId): Task
+  + {abstract} GetAllReportsAsync(): Task<IEnumerable<ReportDto>>
+  + {abstract} GetReportByIdAsync(Guid id): Task<ReportDto>
+  + {abstract} DeleteReportAsync(Guid id): Task
+}
+
+class ReportService {
+  + CreateReportAsync(CreateReportDto reportDto, Guid userId): Task
+  + GetAllReportsAsync(): Task<IEnumerable<ReportDto>>
+  + GetReportByIdAsync(Guid id): Task<ReportDto>
+  + DeleteReportAsync(Guid id): Task
+}
+
+class ReportController {
+  + CreateReport(CreateReportDto reportDto): Task<IActionResult>
+  + GetAllReports(): Task<IActionResult>
+  + GetReportById(Guid id): Task<IActionResult>
+  + DeleteReport(Guid id): Task<IActionResult>
+}
+
+class ReportDto {
+  + Id: Guid
+  + ReportedUserId: Guid
+  + ReportingUserId: Guid
+  + Content: string
+}
+
+class CreateReportDto {
+  + ReportedUserId: Guid
+  + Content: string
+}
+
+IReportRepository <|-- ReportRepository
+IReportService <|-- ReportService
+ReportController --> IReportService
+ReportService --> IReportRepository
+ReportService --> ReportDto
+ReportService --> Report
+ReportRepository --> Report
+
+@enduml
+
+@startuml
+
+left to right direction
+
+skinparam monochrome true
+skinparam defaultFontName Arial
+
+title Diagram sekwencji - Przepływ zgłaszania użytkownika
+
+actor User
+participant Frontend
+participant "ReportController" as Controller
+participant "ReportService" as Service
+participant "ReportRepository" as Repository
+database Database
+
+User -> Frontend: Kliknięcie "Reportuj"
+Frontend -> Controller: POST /api/Report (CreateReportDto)
+Controller -> Service: CreateReportAsync(CreateReportDto, UserId)
+Service -> Repository: AddAsync(Report)
+Repository -> Database: Zapis zgłoszenia
+Database --> Repository: Potwierdzenie
+Repository --> Service: Potwierdzenie
+Service --> Controller: Potwierdzenie
+Controller --> Frontend: Ok
+
+@enduml
+
+@startuml
+
+left to right direction
+
+skinparam monochrome true
+skinparam defaultFontName Arial
+
+title Diagram sekwencji - Przepływ zarządzania zgłoszeniami przez administratora
+
+actor Admin
+participant Frontend
+participant "ReportController" as Controller
+participant "ReportService" as Service
+participant "ReportRepository" as Repository
+database Database
+
+Admin -> Frontend: Wybór sekcji "Manage Reports"
+Frontend -> Controller: GET /api/Report
+Controller -> Service: GetAllReportsAsync()
+Service -> Repository: GetAllAsync()
+Repository -> Database: Pobranie zgłoszeń
+Database --> Repository: Lista zgłoszeń
+Repository --> Service: Lista zgłoszeń
+Service --> Controller: Lista zgłoszeń (ReportDto)
+Controller --> Frontend: Lista zgłoszeń
+
+Admin -> Frontend: Wybór usuwania zgłoszenia
+Frontend -> Controller: DELETE /api/Report/{id}
+Controller -> Service: DeleteReportAsync(id)
+Service -> Repository: DeleteAsync(id)
+Repository -> Database: Usunięcie zgłoszenia
+Database --> Repository: Potwierdzenie
+Repository --> Service: Potwierdzenie
+Service --> Controller: Potwierdzenie
+Controller --> Frontend: Ok
+
+@enduml
