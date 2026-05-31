@@ -56,18 +56,23 @@ const router = createRouter({
       path: '/admin',
       component: () => import('@/views/AdminPanelView.vue'),
       meta: { requiresAuth: true, requiresAdmin: true },
-      children: [
-        {
-          name: 'admin-genres',
-          path: 'genres',
-          component: () => import('@/views/admin/GenresView.vue'),
-        },
-        {
-          name: 'admin-users',
-          path: 'users',
-          component: () => import('@/views/admin/UsersView.vue'),
-        },
-      ],
+       children: [
+         {
+           name: 'admin-genres',
+           path: 'genres',
+           component: () => import('@/views/admin/GenresView.vue'),
+         },
+         {
+           name: 'admin-users',
+           path: 'users',
+           component: () => import('@/views/admin/UsersView.vue'),
+         },
+         {
+           name: 'admin-reports',
+           path: 'reports',
+           component: () => import('@/views/admin/ReportsView.vue'),
+         },
+       ],
     },
   ],
 })
