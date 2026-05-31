@@ -160,11 +160,14 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<PinDto>>> GetUserPins(Guid userId)
+        public async Task<ActionResult<IEnumerable<PinDto>>> GetUserPins(
+            Guid userId,
+            [FromQuery] string? sortBy = "newest",
+            [FromQuery] string? sortOrder = "desc")
         {
             try
             {
-                var pins = await _pinService.GetPinsByUserIdAsync(userId);
+                var pins = await _pinService.GetPinsByUserIdAsync(userId, sortBy, sortOrder);
                 return Ok(pins);
             }
             catch (Exception)

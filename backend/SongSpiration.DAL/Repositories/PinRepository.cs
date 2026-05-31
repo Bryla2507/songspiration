@@ -118,7 +118,7 @@ public class PinRepository : IPinRepository
     public Task<int> SaveChangesAsync() => _db.SaveChangesAsync();
 
     public async Task<IEnumerable<Pin>> GetLikedPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder)
-{
+    {
     // Budujemy zapytanie na encjach bazy danych
     var query = _db.Pins
         .Where(p => p.Likes.Any(l => l.UserId == userId));
@@ -139,5 +139,35 @@ public class PinRepository : IPinRepository
             .ThenInclude(pg => pg.Genre)
         .Include(p => p.Likes) 
         .ToListAsync();
-}
+    }
+    public async Task<IEnumerable<Pin>> GetPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder)
+    {
+        // 1. Tworzymy bazowe zapytanie dla pinów danego użytkownika
+        var query = _db.Pins
+            .Where(p => p.OwnerId == userId);
+
+        // Koniunkcja pomocnicza do kierunku sortowania (Rosnąco / Malejąco)
+        bool isAsc = sortOrder != null && sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase);
+
+        // 2. Logika sortowania po ilości lajków lub po dacie
+        if (sortBy != null && sortBy.Equals("likes", StringComparison.OrdinalIgnoreCase))
+        {
+            query = isAsc 
+                ? query.OrderBy(p => p.Likes.Count) 
+                : query.OrderByDescending(p => p.Likes.Count);
+        }
+        else // Domyślnie (gdy sortBy == "newest" lub cokolwiek innego) sortujemy po dacie utworzenia
+        {
+            query = isAsc 
+                ? query.OrderBy(p => p.CreatedAt) 
+                : query.OrderByDescending(p => p.CreatedAt);
+        }
+
+        // 3. Pobieramy dane z bazy wraz z relacjami
+        return await query
+            .Include(p => p.PinGenres)
+                .ThenInclude(pg => pg.Genre)
+            .Include(p => p.Likes) // Dołączamy lajki, żeby MapToDto w serwisie poprawnie policzył Likes.Count
+            .ToListAsync();
+    }
 }

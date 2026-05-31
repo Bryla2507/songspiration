@@ -21,4 +21,5 @@ public interface IPinRepository
     Task IncrementDownloadCountAsync(Guid pinId);
     Task<int> SaveChangesAsync();
     Task<IEnumerable<SongSpiration.Models.Entities.Pin>> GetLikedPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder);
+    Task<IEnumerable<SongSpiration.Models.Entities.Pin>> GetPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder);
 }

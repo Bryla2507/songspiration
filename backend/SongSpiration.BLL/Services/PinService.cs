@@ -91,6 +91,13 @@ if (createDto.GenreIds != null && createDto.GenreIds.Any())
         return pins.Select(pin => MapToDto(pin)).ToList();
     }
 
+    public async Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder)
+    {
+        // Przekazujemy filtry do repozytorium
+        var pins = await _pinRepository.GetPinsByUserIdAsync(userId, sortBy, sortOrder);
+        return pins.Select(pin => MapToDto(pin)).ToList();
+    }
+
     public async Task<IEnumerable<PinDto>> GetAllPinsAsync(int start, int limit, string? search, string? instrument, string? genre, string? sortBy, string? sortOrder)
     {
         var pins = await _pinRepository.GetPinsAsync(start, limit, search, instrument, genre, sortBy, sortOrder); 

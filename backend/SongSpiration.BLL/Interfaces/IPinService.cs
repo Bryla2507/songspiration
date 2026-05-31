@@ -17,4 +17,5 @@ public interface IPinService
     Task<(bool IsLiked, int LikeCount)> ToggleLikeAsync(Guid userId, Guid pinId);
     Task IncrementDownloadCountAsync(Guid pinId);
     Task<IEnumerable<PinDto>> GetLikedPinsByUserIdAsync(Guid userId, string sortBy, string sortOrder);
+    Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder);
 }
