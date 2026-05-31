@@ -9,5 +9,6 @@ namespace SongSpiration.BLL.Interfaces
     {
         Task<IEnumerable<Genre>> GetAllGenresAsync();
         Task<Genre> AddGenreAsync(GenreCreateDto genreDto);
+        Task DeleteGenreAsync(Guid id);
     }
 }

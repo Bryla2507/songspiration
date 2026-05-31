@@ -48,8 +48,9 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 
 interface Genre {
-  id: number;
+  id: string; // Guid jako string
   name: string;
+  slug?: string;
 }
 
 export default {
@@ -59,19 +60,32 @@ export default {
     const searchTerm = ref('');
     const showModal = ref(false);
     const isEditMode = ref(false);
-    const currentGenre = ref<Genre>({ id: 0, name: '' });
+    const currentGenre = ref<Genre>({ id: '', name: '' });
+
+    const getAxiosConfig = () => {
+      const token = sessionStorage.getItem('token');
+      return {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+    };
 
     const fetchGenres = async () => {
       try {
-        const response = await axios.get('/api/admin/genres');
-        genres.value = response.data;
+        const response = await axios.get('/api/Genre', getAxiosConfig());
+        genres.value = response.data.map((genre: any) => ({
+          id: genre.id,
+          name: genre.name,
+          slug: genre.slug
+        }));
       } catch (error) {
         console.error('Error fetching genres:', error);
       }
     };
 
     const addGenre = () => {
-      currentGenre.value = { id: 0, name: '' };
+      currentGenre.value = { id: '', name: '' };
       isEditMode.value = false;
       showModal.value = true;
     };
@@ -85,21 +99,32 @@ export default {
     const saveGenre = async () => {
       try {
         if (isEditMode.value) {
-          await axios.put(`/api/admin/genres/${currentGenre.value.id}`, { name: currentGenre.value.name });
+          // Edit existing genre
+          const response = await axios.post('/api/Genre', {
+            id: currentGenre.value.id,
+            name: currentGenre.value.name
+          }, getAxiosConfig());
+          const index = genres.value.findIndex(genre => genre.id === currentGenre.value.id);
+          if (index !== -1) {
+            genres.value[index] = response.data;
+          }
         } else {
-          await axios.post('/api/admin/genres', { name: currentGenre.value.name });
+          // Add new genre
+          const response = await axios.post('/api/Genre', {
+            name: currentGenre.value.name
+          }, getAxiosConfig());
+          genres.value.push(response.data);
         }
-        await fetchGenres();
         showModal.value = false;
       } catch (error) {
         console.error('Error saving genre:', error);
       }
     };
 
-    const deleteGenre = async (id: number) => {
+    const deleteGenre = async (id: string) => {
       try {
-        await axios.delete(`/api/admin/genres/${id}`);
-        await fetchGenres();
+        await axios.delete(`/api/Genre/${id}`, getAxiosConfig());
+        genres.value = genres.value.filter(genre => genre.id !== id);
       } catch (error) {
         console.error('Error deleting genre:', error);
       }

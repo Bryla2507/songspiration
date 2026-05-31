@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SongSpiration.BLL.Services;
 using SongSpiration.Models;
 using SongSpiration.BLL.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EntitiesUser = SongSpiration.Models.Entities.User;
+using ModelsGenre = SongSpiration.Models.Genre;
 
 namespace SongSpiration.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminPanelController : ControllerBase
     {
         private readonly AdminPanelService _adminPanelService;
@@ -19,15 +23,32 @@ namespace SongSpiration.API.Controllers
             _adminPanelService = adminPanelService;
         }
 
+        // Tymczasowy endpoint bez autoryzacji do testów
+        [HttpGet("test/genres")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<ModelsGenre>>> TestGetAllGenresAsync()
+        {
+            var genres = await _adminPanelService.GetAllGenresAsync();
+            return Ok(genres);
+        }
+
+        // Tymczasowy endpoint bez autoryzacji do testów
+        [HttpGet("all-users")]
+        public async Task<ActionResult<List<EntitiesUser>>> GetUsersAsync([FromQuery] string criteria)
+        {
+            var users = await _adminPanelService.SearchUsersAsync(criteria);
+            return Ok(users);
+        }
+
         [HttpGet("genres")]
-        public async Task<ActionResult<List<Genre>>> GetAllGenresAsync()
+        public async Task<ActionResult<List<ModelsGenre>>> GetAllGenresAsync()
         {
             var genres = await _adminPanelService.GetAllGenresAsync();
             return Ok(genres);
         }
 
         [HttpGet("genres/{id}")]
-        public async Task<ActionResult<Genre>> GetGenreByIdAsync(Guid id)
+        public async Task<ActionResult<ModelsGenre>> GetGenreByIdAsync(Guid id)
         {
             var genre = await _adminPanelService.GetGenreByIdAsync(id);
             if (genre == null)
@@ -38,14 +59,14 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpPost("genres")]
-        public async Task<ActionResult<Genre>> CreateGenreAsync([FromBody] GenreCreateDto genreCreateDto)
+        public async Task<ActionResult<ModelsGenre>> CreateGenreAsync([FromBody] GenreCreateDto genreCreateDto)
         {
             var genre = await _adminPanelService.CreateGenreAsync(genreCreateDto);
             return CreatedAtAction(nameof(GetGenreByIdAsync), new { id = genre.Id }, genre);
         }
 
         [HttpPut("genres/{id}")]
-        public async Task<ActionResult<Genre>> UpdateGenreAsync(Guid id, [FromBody] GenreCreateDto genreCreateDto)
+        public async Task<ActionResult> UpdateGenreAsync(Guid id, [FromBody] GenreCreateDto genreCreateDto)
         {
             await _adminPanelService.UpdateGenreAsync(id, genreCreateDto);
             return NoContent();
@@ -59,9 +80,9 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpGet("users")]
-        public async Task<ActionResult<List<User>>> SearchUsersAsync([FromQuery] string criteria)
+        public async Task<ActionResult<IEnumerable<EntitiesUser>>> GetAllUsersAsync()
         {
-            var users = await _adminPanelService.SearchUsersAsync(criteria);
+            var users = await _adminPanelService.GetAllUsersAsync();
             return Ok(users);
         }
 

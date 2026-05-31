@@ -1,10 +1,11 @@
 <template>
   <div class="admin-panel">
     <h1>Admin Panel</h1>
-    <nav class="admin-nav">
-      <router-link to="/admin/genres">Manage Genres</router-link>
-      <router-link to="/admin/users">Manage Users</router-link>
-    </nav>
+     <nav class="admin-nav">
+       <router-link to="/admin/genres">Manage Genres</router-link>
+       <router-link to="/admin/users">Manage Users</router-link>
+       <router-link to="/admin/reports">Manage Reports</router-link>
+     </nav>
     <router-view></router-view>
   </div>
 </template>

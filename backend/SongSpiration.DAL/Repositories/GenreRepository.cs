@@ -9,9 +9,9 @@ namespace SongSpiration.DAL.Repositories
 {
     public class GenreRepository : IGenreRepository
     {
-        private readonly DbContext _context;
+        private readonly SongSpirationDbContext _context;
 
-        public GenreRepository(DbContext context)
+        public GenreRepository(SongSpirationDbContext context)
         {
             _context = context;
         }

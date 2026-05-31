@@ -52,7 +52,7 @@ const handleLogin = async () => {
       const data = await response.json();
       // Zapisujemy token w sesji (zniknie po zamknięciu przeglądarki)
       sessionStorage.setItem('token', data.accessToken || data.token); // Dostosowane do AuthResponseDto z .NET
-      
+
       // Zapisujemy nazwę użytkownika, by wyświetlić inicjały
       if (data.user && data.user.displayName) {
         sessionStorage.setItem('userName', data.user.displayName);
@@ -64,8 +64,18 @@ const handleLogin = async () => {
         sessionStorage.setItem('userId', data.user.id);
       }
 
-      // Przekierowanie na feed
-      router.push('/');
+      // Zapisujemy rolę użytkownika
+      if (data.user && data.user.roles) {
+        sessionStorage.setItem('role', data.user.roles);
+      }
+
+      // Sprawdzamy czy użytkownik ma rolę Admin i przekierowujemy do panelu admina
+      if (data.user && data.user.roles && data.user.roles.includes('Admin')) {
+        router.push('/admin');
+      } else {
+        // Przekierowanie na feed dla zwykłych użytkowników
+        router.push('/');
+      }
     } else {
       errorMessage.value = 'Nieprawidłowy login lub hasło.';
     }

@@ -16,6 +16,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IGenreService, GenreService>();
         services.AddScoped<IRankingService, RankingService>();
+        services.AddScoped<IAdminPanelService, AdminPanelService>();
+        services.AddScoped<IReportService, ReportService>();
 
         // Add other services as needed
         // services.AddScoped<ICollectionService, CollectionService>();
