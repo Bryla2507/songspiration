@@ -27,7 +27,7 @@
           :class="{ active: activeTab === 'polubione' }" 
           @click="activeTab = 'polubione'"
         >
-          {{ isOwner ? '❤️ Polubione piny' : '❤️ Polubione przez użytkownika' }}
+          ❤️ Polubione piny
         </button>
       </div>
 
@@ -49,13 +49,61 @@
         :pins="pins" 
         :title="activeTab === 'tworczosc' 
           ? (isOwner ? 'Twoja twórczość' : 'Piny użytkownika') 
-          : (isOwner ? 'Polubione utwory' : 'Polubione przez użytkownika')"
-        :stats="{ 
+          : 'Polubione piny'"
+        :stats="activeTab === 'tworczosc' ? { 
           pins: user.addedPinsCount || user.AddedPinsCount || 0, 
           likes: user.totalLikesReceived || user.TotalLikesReceived || 0 
-        }"
-        @open-pin="openApiModal" 
+        } : null"
+        :isOwner="isOwner"
+        :activeTab="activeTab"
+        @open-pin="openApiModal"
+        @delete-pin="promptDeletePin"
+        @change-visibility="promptChangeVisibility"
+        @unlike-pin="promptUnlikePin"
       />
+
+    <div v-if="pinToDelete" class="modal-overlay" @click.self="pinToDelete = null">
+      <div class="modal-card">
+        <div class="modal-header"><h3>⚠️ Usuwanie pinu</h3></div>
+        <div class="modal-body"><p>Czy na pewno chcesz usunąć utwór "<strong>{{ pinToDelete.title }}</strong>"? Tego nie da się cofnąć.</p></div>
+        <div class="modal-footer">
+          <button @click="pinToDelete = null" class="btn-modal-cancel">Anuluj</button>
+          <button @click="executeDeletePin" class="btn-modal-confirm">Tak, usuń</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="pinToUnlike" class="modal-overlay" @click.self="pinToUnlike = null">
+      <div class="modal-card">
+        <div class="modal-header"><h3>💔 Usuwanie polubienia</h3></div>
+        <div class="modal-body"><p>Odebrać polubienie dla "<strong>{{ pinToUnlike.title }}</strong>"?</p></div>
+        <div class="modal-footer">
+          <button @click="pinToUnlike = null" class="btn-modal-cancel">Anuluj</button>
+          <button @click="executeUnlikePin" class="btn-modal-confirm">Odbierz polubienie</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="pinToChangeVisibility" class="modal-overlay" @click.self="pinToChangeVisibility = null">
+      <div class="modal-card">
+        <div class="modal-header"><h3>👁️ Zmiana widoczności</h3></div>
+        <div class="modal-body">
+          <p>Ustaw nową widoczność dla "<strong>{{ pinToChangeVisibility.title }}</strong>":</p>
+          <div class="filter-group" style="margin-top: 15px;">
+            <select v-model="newVisibilitySelection" style="width: 100%;">
+              <option :value="0">🌍 Publiczny (widoczny dla wszystkich)</option>
+              <option :value="1">🔒 Prywatny (tylko dla Ciebie)</option>
+              <option :value="2">🔗 Niepubliczny (dostępny tylko z linku)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="pinToChangeVisibility = null" class="btn-modal-cancel">Anuluj</button>
+          <button @click="executeChangeVisibility" class="btn-modal-confirm save">Zapisz zmianę</button>
+        </div>
+      </div>
+    </div>
+
     </div>
     
     <div v-else class="loading-screen">Ładowanie profilu...</div>
@@ -144,6 +192,12 @@ const isDragging = ref(false);
 const selectedFile = ref(null);
 const fileInput = ref(null);
 const selectedPin = ref(null);
+
+// STANY DLA ZARZĄDZANIA PINAMI
+const pinToDelete = ref(null);
+const pinToUnlike = ref(null);
+const pinToChangeVisibility = ref(null);
+const newVisibilitySelection = ref(0);
 
 // STAN ZAKŁADEK I FILTRÓW
 const activeTab = ref('tworczosc'); // 'tworczosc' lub 'polubione'
@@ -266,6 +320,70 @@ const executeDelete = async () => {
 
 const openApiModal = (pin) => { selectedPin.value = pin; showApiModal.value = true; };
 const closeApiModal = () => { showApiModal.value = false; selectedPin.value = null; };
+
+// --- ZARZĄDZANIE PINAMI LOGIKA ---
+
+const promptDeletePin = (pin) => { pinToDelete.value = pin; };
+const promptUnlikePin = (pin) => { pinToUnlike.value = pin; };
+const promptChangeVisibility = (pin) => { 
+  pinToChangeVisibility.value = pin; 
+  newVisibilitySelection.value = pin.visibility || 0; // Ustaw domyślną wartość w selectie
+};
+
+const executeDeletePin = async () => {
+  if (!pinToDelete.value) return;
+  try {
+    const token = sessionStorage.getItem('token');
+    const res = await fetch(`${apiUrl}/api/Pins/${pinToDelete.value.id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      // Aktualizuj listę i statystyki po udanym usunięciu
+      fetchData();
+      pinToDelete.value = null;
+    }
+  } catch (e) { console.error("Błąd podczas usuwania", e); }
+};
+
+const executeUnlikePin = async () => {
+  if (!pinToUnlike.value) return;
+  try {
+    const token = sessionStorage.getItem('token');
+    
+    // ZMIANA TUTAJ: Zaktualizowany URL z "/toggle-like"
+    const res = await fetch(`${apiUrl}/api/Pins/${pinToUnlike.value.id}/toggle-like`, { 
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+      // Skoro cofnęliśmy lajka, odświeżamy listę pinów
+      fetchPins(); 
+      pinToUnlike.value = null;
+    }
+  } catch (e) { console.error("Błąd podczas cofania polubienia", e); }
+};
+
+const executeChangeVisibility = async () => {
+  if (!pinToChangeVisibility.value) return;
+  try {
+    const token = sessionStorage.getItem('token');
+    const res = await fetch(`${apiUrl}/api/Pins/${pinToChangeVisibility.value.id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      // Zgodnie z backendowym UpdatePinDto aktualizujemy pole Visibility
+      body: JSON.stringify({ visibility: newVisibilitySelection.value })
+    });
+    if (res.ok) {
+      fetchPins(); // Odśwież żeby zastosować zmianę
+      pinToChangeVisibility.value = null;
+    }
+  } catch (e) { console.error("Błąd podczas zmiany widoczności", e); }
+};
 
 onMounted(fetchData);
 </script>
