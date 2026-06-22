@@ -145,6 +145,7 @@ public async Task<(bool IsLiked, int LikeCount)> ToggleLikeAsync(Guid userId, Gu
             Size = pin.Size,
             CreatedAt = pin.CreatedAt,
             LikeCount = pin.Likes?.Count ?? 0,
+            DownloadsCount = pin.DownloadsCount,
             Genres = pin.PinGenres?
                 .Where(pg => pg.Genre != null)
                 .Select(pg => pg.Genre!.Name)

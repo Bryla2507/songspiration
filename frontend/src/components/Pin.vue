@@ -10,14 +10,20 @@
 
       <!-- METADANE UTWORU Z PROPÓW -->
       <div class="at-track-info">
-        <div class="at-main-row">
-          <h2 class="at-title">{{ pin.title }}</h2>
-          <button @click="toggleLike" :class="['btn-like', { 'is-liked': isLiked }]">
-            <span class="heart-icon">{{ isLiked ? '❤️' : '🤍' }}</span>
-            <span class="like-count">{{ currentLikeCount }}</span>
-          </button>
-          <!-- Wyświetlanie dynamicznego BPM -->
-        </div>
+         <div class="at-main-row">
+           <h2 class="at-title">{{ pin.title }}</h2>
+           <div class="at-actions">
+             <button @click="toggleLike" :class="['btn-like', { 'is-liked': isLiked }]">
+               <span class="heart-icon">{{ isLiked ? '❤️' : '🤍' }}</span>
+               <span class="like-count">{{ currentLikeCount }}</span>
+             </button>
+             <button @click="downloadPin" class="btn-download" title="Pobierz plik">
+               <span class="download-icon">📥</span>
+               <span class="download-count">{{ pin.downloadsCount || 0 }}</span>
+             </button>
+           </div>
+           <!-- Wyświetlanie dynamicznego BPM -->
+         </div>
         <div class="at-tags">
           <span class="at-tag">{{ getInstrumentName(pin.instrument) }}</span>
           <span v-for="pg in pin.pinGenres" :key="pg.genreId" class="at-tag">
@@ -131,7 +137,7 @@ const handleAction = () => {
 const toggleLike = async () => {
   const visitorId = localStorage.getItem('visitorId');
   const token = sessionStorage.getItem('token');
-  
+
   try {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -158,6 +164,42 @@ const toggleLike = async () => {
     }
   } catch (error) {
     console.error("Błąd podczas lajkowania:", error);
+  }
+};
+
+const downloadPin = async () => {
+  try {
+    const token = sessionStorage.getItem('token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    // Call the download endpoint which will increment the download count
+    const response = await fetch(`${apiUrl}/api/Pins/${props.pin.id}/download`, {
+      method: 'GET',
+      headers: headers
+    });
+
+    if (response.ok) {
+      // Create a blob from the response and trigger download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = props.pin.filename || `pin_${props.pin.id}.gp`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      // Optionally update the download count display
+      if (props.pin.downloadsCount !== undefined) {
+        props.pin.downloadsCount = (props.pin.downloadsCount || 0) + 1;
+      }
+    } else {
+      console.error("Failed to download file");
+    }
+  } catch (error) {
+    console.error("Error during download:", error);
   }
 };
 
@@ -245,8 +287,26 @@ onUnmounted(() => {
 .btn-like:hover { background: #f8f9fa; transform: scale(1.05); }
 .btn-like.is-liked { border-color: #ffb3b3; background: #fff5f5; }
 
+.btn-download {
+  background: none;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-download:hover { background: #f8f9fa; transform: scale(1.05); }
+.btn-download:active { transform: scale(0.98); }
+
 .heart-icon { font-size: 1.1rem; }
 .like-count { font-size: 0.9rem; font-weight: 700; color: #666; }
+
+.download-icon { font-size: 1.1rem; }
+.download-count { font-size: 0.9rem; font-weight: 700; color: #666; }
 
 .at-bpm-badge {
   background: #f1f8ff;
