@@ -18,6 +18,7 @@ public class PinDto
     public long Size { get; set; }
     public DateTime CreatedAt { get; set; }
     public int LikeCount { get; set; }
+    public int DownloadsCount { get; set; }
     public List<string> Genres { get; set; } = new();
 }
 

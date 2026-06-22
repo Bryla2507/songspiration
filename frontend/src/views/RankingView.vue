@@ -45,8 +45,8 @@
             </h3>
             <div class="stats">
               <span v-if="activeTab === 'editors-choice'" class="badge editor">Editor's Choice</span>
-              <span v-if="activeTab === 'likes' || activeTab === 'editors-choice'">❤️ {{ user.totalLikes }} likes</span>
-              <span v-if="activeTab === 'downloads' || activeTab === 'editors-choice'">⬇️ {{ user.totalDownloads }} downloads</span>
+              <span v-if="activeTab === 'likes'">❤️ {{ user.totalLikes }} likes</span>
+              <span v-if="activeTab === 'downloads'">⬇️ {{ user.totalDownloads }} downloads</span>
             </div>
           </div>
         </div>
