@@ -37,7 +37,7 @@
         <div v-for="(user, index) in users" :key="user.id" class="user-card">
           <div class="rank-number">#{{ index + 1 }}</div>
           <div class="avatar-container">
-            <img :src="user.avatarUrl ? `${apiUrl}${user.avatarUrl}` : '/avatars/default.png'" alt="User Avatar" class="avatar" />
+            <img :src="user.avatarUrl ? `${apiUrl}${user.avatarUrl}` : '/avatars/default.jpg'" alt="User Avatar" class="avatar" />
           </div>
           <div class="user-info">
             <h3 class="display-name">
