@@ -37,7 +37,7 @@
         <div v-for="(user, index) in users" :key="user.id" class="user-card">
           <div class="rank-number">#{{ index + 1 }}</div>
           <div class="avatar-container">
-            <img :src="user.avatarUrl ? `${apiUrl}${user.avatarUrl}` : '/avatars/default.jpg'" alt="User Avatar" class="avatar" />
+            <img :src="user.avatarUrl ? `${apiUrl}${user.avatarUrl}` : 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F058%2F338%2F462%2Fnon_2x%2Fgeneric-profile-picture-placeholder-default-user-profile-image-vector.jpg&f=1&nofb=1&ipt=ab550c542ef4d3714ca39f7c06f1fef678d72f32de077c11f9de5ae47878a9e8'" alt="User Avatar" class="avatar" />
           </div>
           <div class="user-info">
             <h3 class="display-name">
