@@ -1,11 +1,10 @@
 <template>
   <header class="user-dashboard">
     <div class="avatar-side">
-      <div class="large-avatar-circle" @click="isOwner ? $emit('change-avatar') : null">
+      <div class="large-avatar-circle" @click="$emit('change-avatar')">
         <img v-if="user.avatarUrl || user.AvatarUrl" :src="`${apiUrl}${user.avatarUrl || user.AvatarUrl}`" alt="Avatar" />
         <span v-else>{{ (user.displayName || user.DisplayName)?.charAt(0).toUpperCase() }}</span>
-        
-        <div v-if="isOwner" class="edit-overlay">Zmień zdjęcie</div>
+        <div class="edit-overlay">Zmień zdjęcie</div>
       </div>
     </div>
 
@@ -14,20 +13,16 @@
       <p class="user-bio">{{ user.bio || user.Bio || 'Muzyka to moja passion...' }}</p>
       
        <div class="dashboard-btns">
-         <template v-if="isOwner">
-           <button @click="$emit('edit')" class="btn-dashboard primary">Zmień dane</button>
-           <button @click="$emit('delete')" class="btn-dashboard danger">Usuń konto</button>
-         </template>
-         
-         <button v-else @click="$emit('report')" class="btn-dashboard warning">Reportuj</button>
+         <button @click="$emit('edit')" class="btn-dashboard primary">Zmień dane</button>
+         <button @click="$emit('report')" class="btn-dashboard warning">Reportuj</button>
+         <button @click="$emit('delete')" class="btn-dashboard danger">Usuń konto</button>
        </div>
     </div>
   </header>
 </template>
 
 <script setup>
-// Dodano prop 'isOwner' przekazywany z ProfileView
-defineProps(['user', 'isOwner']);
+defineProps(['user']);
 defineEmits(['edit', 'change-avatar', 'report', 'delete']);
 const apiUrl = import.meta.env.VITE_API_URL;
 </script>

@@ -76,25 +76,9 @@ if (createDto.GenreIds != null && createDto.GenreIds.Any())
         return pin != null ? MapToDto(pin) : null;
     }
 
-    public async Task<IEnumerable<PinDto>> GetLikedPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder)
-    {
-        // Wywołujemy repozytorium z warstwy DAL
-        var pins = await _pinRepository.GetLikedPinsByUserIdAsync(userId, sortBy, sortOrder);
-        
-        // Mapujemy encje bazy danych na Twoje DTO z BLL
-        return pins.Select(MapToDto).ToList();
-    }
-
     public async Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId)
     {
         var pins = await _pinRepository.GetPinsByUserIdAsync(userId);
-        return pins.Select(pin => MapToDto(pin)).ToList();
-    }
-
-    public async Task<IEnumerable<PinDto>> GetPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder, Guid? currentUserId = null)
-    {
-        bool showPrivate = currentUserId.HasValue && currentUserId.Value == userId;
-        var pins = await _pinRepository.GetPinsByUserIdAsync(userId, sortBy, sortOrder, showPrivate);
         return pins.Select(pin => MapToDto(pin)).ToList();
     }
 

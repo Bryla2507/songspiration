@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SongSpiration.DAL.Interfaces;
 using SongSpiration.Models.Entities;
-using PinVisibility = SongSpiration.Models.PinVisibility;
 
 namespace SongSpiration.DAL.Repositories;
 
@@ -117,54 +116,4 @@ public class PinRepository : IPinRepository
     }
 
     public Task<int> SaveChangesAsync() => _db.SaveChangesAsync();
-
-    public async Task<IEnumerable<Pin>> GetLikedPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder)
-    {
-    // Budujemy zapytanie na encjach bazy danych
-    var query = _db.Pins
-        .Where(p => p.Likes.Any(l => l.UserId == userId));
-
-    // Filtrowanie po dacie dodania pinu (wymóg dla polubionych)
-    if (sortOrder != null && sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase))
-    {
-        query = query.OrderBy(p => p.CreatedAt);
-    }
-    else
-    {
-        query = query.OrderByDescending(p => p.CreatedAt);
-    }
-
-    // Wyciągamy dane z bazy razem z relacjami gatunków oraz lajków (żeby MapToDto policzył LikeCount)
-    return await query
-        .Include(p => p.PinGenres)
-            .ThenInclude(pg => pg.Genre)
-        .Include(p => p.Likes) 
-        .ToListAsync();
-    }
-    public async Task<IEnumerable<Pin>> GetPinsByUserIdAsync(Guid userId, string? sortBy = null, string? sortOrder = null, bool showPrivate = false)
-    {
-        var query = _db.Pins.Where(p => p.OwnerId == userId);
-
-        if (!showPrivate)
-        {
-            query = query.Where(p => p.Visibility != PinVisibility.Private);
-        }
-
-        bool isAsc = sortOrder != null && sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase);
-
-        if (sortBy != null && sortBy.Equals("likes", StringComparison.OrdinalIgnoreCase))
-        {
-            query = isAsc ? query.OrderBy(p => p.Likes.Count) : query.OrderByDescending(p => p.Likes.Count);
-        }
-        else
-        {
-            query = isAsc ? query.OrderBy(p => p.CreatedAt) : query.OrderByDescending(p => p.CreatedAt);
-        }
-
-        return await query
-            .Include(p => p.PinGenres)
-                .ThenInclude(pg => pg.Genre)
-            .Include(p => p.Likes)
-            .ToListAsync();
-    }
 }

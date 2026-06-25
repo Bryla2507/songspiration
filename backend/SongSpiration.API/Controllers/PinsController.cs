@@ -160,32 +160,23 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpGet("user/{userId}")]
-    public async Task<ActionResult<IEnumerable<PinDto>>> GetUserPins(
-    Guid userId,
-    [FromQuery] string? sortBy = "newest",
-    [FromQuery] string? sortOrder = "desc")
-    {
-        try
+        public async Task<ActionResult<IEnumerable<PinDto>>> GetUserPins(Guid userId)
         {
-            Guid? currentUserId = null;
-            var nameIdentifier = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(nameIdentifier, out var parsedId))
+            try
             {
-                currentUserId = parsedId;
+                var pins = await _pinService.GetPinsByUserIdAsync(userId);
+                return Ok(pins);
             }
-
-            var pins = await _pinService.GetPinsByUserIdAsync(userId, sortBy, sortOrder, currentUserId);
-            return Ok(pins);
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "Błąd podczas pobierania pinów użytkownika." });
+            }
         }
-        catch (Exception)
-        {
-            return StatusCode(500, new { message = "Błąd podczas pobierania pinów użytkownika." });
-        }
-    }
 
         [HttpPost("{id}/toggle-like")]
         public async Task<IActionResult> ToggleLike(Guid id, [FromQuery] Guid? userId)
         {
+            // Próbujemy pobrać ID z tokena, jeśli użytkownik jest zalogowany
             var authUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
                              ?? User.FindFirst("sub")?.Value;
 
@@ -210,21 +201,10 @@ namespace SongSpiration.API.Controllers
         }
 
         [HttpGet("user/{userId}/liked")]
-        public async Task<ActionResult<IEnumerable<PinDto>>> GetUserLikedPins(
-            Guid userId,
-            [FromQuery] string sortBy = "newest",
-            [FromQuery] string sortOrder = "desc")
+        public ActionResult<IEnumerable<PinDto>> GetUserLikedPins(Guid userId)
         {
-            try
-            {
-                // Wywołujemy serwis, przekazując filtry sortowania
-                var likedPins = await _pinService.GetLikedPinsByUserIdAsync(userId, sortBy, sortOrder);
-                return Ok(likedPins);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Błąd podczas pobierania polubionych pinów użytkownika.", details = ex.Message });
-            }
+            // TODO: Dla ciebie Kacperku ;3
+            return Ok(new List<PinDto>()); 
         }
     }
 }
