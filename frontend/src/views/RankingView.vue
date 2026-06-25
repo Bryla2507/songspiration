@@ -1,8 +1,8 @@
 <template>
   <div class="ranking-view">
     <div class="ranking-header">
-      <h1>User Rankings</h1>
-      <p>Discover the most popular creators on SongSpiration!</p>
+      <h1>Ranking użytkowników</h1>
+      <p>Odkryj najlepszych twórców na SongSpiration!</p>
     </div>
 
     <div class="tabs">
@@ -16,13 +16,13 @@
         :class="{ active: activeTab === 'likes' }" 
         @click="activeTab = 'likes'"
       >
-        Most Liked
+        Najwięcej polubień
       </button>
       <button 
         :class="{ active: activeTab === 'downloads' }" 
         @click="activeTab = 'downloads'"
       >
-        Most Downloaded
+        Most pobrań
       </button>
     </div>
 
