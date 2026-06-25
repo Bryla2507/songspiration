@@ -332,20 +332,26 @@ const promptChangeVisibility = (pin) => {
 
 const executeDeletePin = async () => {
   if (!pinToDelete.value) return;
+  
+  const token = sessionStorage.getItem('token');
   try {
-    const token = sessionStorage.getItem('token');
     const res = await fetch(`${apiUrl}/api/Pins/${pinToDelete.value.id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    if (res.ok) {
-      // Aktualizuj listę i statystyki po udanym usunięciu
-      fetchData();
-      pinToDelete.value = null;
-    }
-  } catch (e) { console.error("Błąd podczas usuwania", e); }
-};
 
+    if (res.ok) {
+      await fetchPins(); // Odśwież listę po sukcesie
+      pinToDelete.value = null; // Zamknij modal tylko przy sukcesie
+    } else {
+      const err = await res.text();
+      console.error("Błąd serwera podczas usuwania:", err);
+      alert("Nie można usunąć utworu. Sprawdź czy nie jest powiązany z innymi danymi.");
+    }
+  } catch (e) {
+    console.error("Błąd sieci:", e);
+  }
+};
 const executeUnlikePin = async () => {
   if (!pinToUnlike.value) return;
   try {

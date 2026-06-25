@@ -15,7 +15,7 @@
           <template v-if="activeTab === 'tworczosc'">
             <button class="action-btn" @click="$emit('change-visibility', pin)" title="Zmień widoczność">
               <span v-if="pin.visibility === 0">🌍</span> <span v-else-if="pin.visibility === 1">🔒</span> <span v-else>🔗</span> </button>
-            <button class="action-btn delete" @click="$emit('delete-pin', pin)" title="Usuń pin">🗑️</button>
+            <button class="action-btn delete" @click.stop="$emit('delete-pin', pin)" title="Usuń pin">🗑️</button>
           </template>
 
           <template v-if="activeTab === 'polubione'">

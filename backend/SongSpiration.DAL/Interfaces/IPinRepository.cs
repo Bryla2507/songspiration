@@ -13,6 +13,7 @@ public interface IPinRepository
     Task AddAsync(Pin pin);
     void Update(Pin pin);
     void Remove(Pin pin);
+    void RemoveWithRelations(Pin pin);
     Task<bool> ToggleLikeAsync(Guid userId, Guid pinId);
     Task<int> GetCountByUserIdAsync(Guid userId);
     Task<int> GetTotalLikesReceivedByUserIdAsync(Guid userId);
@@ -22,4 +23,5 @@ public interface IPinRepository
     Task<int> SaveChangesAsync();
     Task<IEnumerable<SongSpiration.Models.Entities.Pin>> GetLikedPinsByUserIdAsync(Guid userId, string? sortBy, string? sortOrder);
     Task<IEnumerable<SongSpiration.Models.Entities.Pin>> GetPinsByUserIdAsync(Guid userId, string? sortBy = null, string? sortOrder = null, bool showPrivate = false);
+
 }

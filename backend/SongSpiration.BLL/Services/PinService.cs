@@ -122,10 +122,13 @@ if (createDto.GenreIds != null && createDto.GenreIds.Any())
 
     public async Task<bool> DeletePinAsync(Guid pinId)
     {
-        var existingPin = await _pinRepository.GetByIdAsync(pinId);
+        // Używamy wersji WithDetails, żeby załadować Leki i Gatunki
+        var existingPin = await _pinRepository.GetByIdWithDetailsAsync(pinId);
         if (existingPin == null) return false;
-
-        _pinRepository.Remove(existingPin);
+    
+        // Używamy nowej metody, która usunie wszystko po kolei (lajki -> gatunki -> pin)
+        _pinRepository.RemoveWithRelations(existingPin);
+        
         await _pinRepository.SaveChangesAsync();
         return true;
     }

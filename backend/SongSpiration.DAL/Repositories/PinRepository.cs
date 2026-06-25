@@ -18,6 +18,15 @@ public class PinRepository : IPinRepository
     public async Task AddAsync(Pin pin) => await _db.Pins.AddAsync(pin);
 
     public void Remove(Pin pin) => _db.Pins.Remove(pin);
+    public void RemoveWithRelations(Pin pin)
+    {
+        // Ręcznie czyścimy tabele zależne, żeby baza nie wywaliła błędu 500
+        if (pin.PinGenres != null) _db.PinGenres.RemoveRange(pin.PinGenres);
+        if (pin.Likes != null) _db.Likes.RemoveRange(pin.Likes);
+        
+        // Teraz usuwamy główny rekord
+        _db.Pins.Remove(pin);
+    }
 
     public void Update(Pin pin) => _db.Pins.Update(pin);
 
