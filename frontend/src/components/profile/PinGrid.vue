@@ -26,6 +26,7 @@
 
         <div class="pin-icon">🎵</div>
         <h4>{{ pin.title }}</h4>
+        <p v-if="pin.description" class="pin-description">{{ pin.description }}</p>
         <p class="pin-meta">{{ getInstrumentName(pin.instrument) }}</p>
       </div>
     </div>
@@ -55,6 +56,7 @@ const getInstrumentName = (id) => {
 .pin-card-simple { position: relative; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center; transition: 0.2s; cursor: pointer; }
 .pin-card-simple:hover { transform: translateY(-3px); border-color: #2ecc71; background: #fff; }
 .pin-icon { font-size: 24px; margin-bottom: 10px; }
+.pin-description { font-size: 13px; color: #64748b; margin-top: -5px; margin-bottom: 10px; }
 .empty-state { text-align: center; padding: 40px; color: #94a3b8; }
 
 /* STYLOWANIE PRZYCISKÓW AKCJI */
